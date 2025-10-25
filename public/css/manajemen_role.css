@@ -1,0 +1,220 @@
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#f9f9f9;
+}
+
+nav{
+display:flex;
+justify-content:center;
+gap:30px;
+padding:15px 0;
+}
+nav a{
+text-decoration:none;
+padding:5px 10px;
+}
+.nav-atas{
+background:#f5b301;
+color:#fff;
+}
+.nav-atas a{ color:#fff; }
+
+a.tambah-user{
+display:inline-block;
+margin:20px;
+padding:10px 15px;
+background:transparent;
+border:1px solid #000;
+color:#111;
+border-radius:4px;
+text-decoration:none;
+font-weight:bold;
+}
+a.tambah-user:hover{ background:rgba(0,0,0,.06); }
+
+.button-container{
+width:90%;
+margin:16px auto 10px;
+display:flex;
+gap:12px;
+align-items:center;
+justify-content:flex-start;
+padding-left:40px;
+}
+
+table{
+width:90%;
+margin:0 auto;
+border-collapse:collapse;
+background:#fff;
+}
+th,td{
+border:1px solid #ccc;
+padding:12px 15px;
+text-align:left;
+}
+th{
+background:#020381;
+color:#fff;
+}
+tr:nth-child(even){ background:#f2f2f2; }
+
+td .action-btn{
+display:inline-block;
+margin-right:8px;
+padding:6px 10px;
+font-size:14px;
+text-decoration:none;
+border-radius:4px;
+font-weight:bold;
+background:transparent;
+border:1px solid #000;
+color:#111;
+}
+td .action-btn:hover{ background:rgba(0,0,0,.06); }
+
+table td a[href*="edit_user.php"],
+table td a[href*="reset_password.php"]{
+display:inline-block;
+padding:6px 10px;
+border-radius:6px;
+font-size:13px;
+font-weight:600;
+background:transparent;
+border:1px solid #000;
+color:#111 !important;
+text-decoration:none;
+transition:all .25s ease;
+margin-right:6px;
+}
+table td a[href*="edit_user.php"]:hover,
+table td a[href*="reset_password.php"]:hover{
+background:rgba(0,0,0,.06);
+transform:translateY(-2px);
+box-shadow:0 3px 6px rgba(0,0,0,.12);
+}
+
+footer{
+background:#020381;
+color:#fff;
+text-align:center;
+padding:20px;
+margin-top:30px;
+font-size:14px;
+line-height:1.5;
+}
+footer h3{ margin:0 0 10px; }
+
+/* Komponen tombol umum: transparan + border hitam */
+.btn{
+display:inline-block;
+padding:8px 16px;
+border-radius:6px;
+font-size:.95rem;
+font-weight:600;
+text-decoration:none;
+text-align:center;
+cursor:pointer;
+border:1px solid #000;
+background:transparent;
+color:#111;
+transition:all .25s ease;
+line-height:1.4;
+}
+.btn:hover{
+background:rgba(0,0,0,.06);
+transform:translateY(-2px);
+box-shadow:0 3px 6px rgba(0,0,0,.12);
+}
+.btn-sm{
+padding:6px 12px;
+font-size:.85rem;
+}
+
+/* Varian tetap transparan + border hitam */
+.btn-primary,
+.btn-warning,
+.btn-danger,
+.btn-ghost{
+background:transparent;
+border:1px solid #000;
+color:#111;
+}
+
+/* Bar aksi */
+.actions{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+margin:16px 0;
+}
+
+/* Tombol navigasi daftar */
+.kembali,
+.tambah-user{
+display:inline-block;
+padding:8px 16px;
+border-radius:6px;
+font-size:.95rem;
+font-weight:600;
+background:transparent;
+border:1px solid #000;
+color:#111 !important;
+text-decoration:none;
+transition:all .25s ease;
+}
+.kembali:hover,
+.tambah-user:hover{
+background:rgba(0,0,0,.06);
+transform:translateY(-2px);
+box-shadow:0 3px 6px rgba(0,0,0,.12);
+}
+
+/* Khusus halaman manajemen role */
+.role-box{
+background:#fff;
+border:1px solid #e5e5e5;
+border-radius:10px;
+padding:12px 14px;
+margin-bottom:10px;
+}
+
+/* KECILKAN tombol: Nonaktifkan, Aktifkan, Jadikan Role Aktif */
+.btn.btn-toggle-on,
+.btn.btn-toggle-off,
+.btn.btn-make-active{
+padding:4px 8px;
+font-size:12px;
+line-height:1.2;
+border-radius:4px;
+border-width:1px;
+min-height:28px;
+}
+
+/* KECILKAN tombol "Tambah Role" di baris tambah role */
+.role-add .btn,
+form select + .btn{
+padding:4px 8px;
+font-size:12px;
+line-height:1.2;
+border-radius:4px;
+border-width:1px;
+min-height:28px;
+}
+
+/* Kompakkan baris tambah role */
+.role-add{ display:flex; flex-wrap:wrap; gap:6px; }
+
+/* Kontrol form */
+select{
+font:inherit;
+padding:8px 12px;
+border-radius:6px;
+border:1px solid #000;
+background:#fff;
+color:#111;
+transition:box-shadow .15s ease;
+}
+select:hover{ box-shadow:0 0 0 3px rgba(0,0,0,.08); }
+select:focus{ outline:0; box-shadow:0 0 0 3px rgba(0,0,0,.14); }

@@ -1,0 +1,257 @@
+/* =========================
+  THEME & BASE (tone diselaraskan)
+  ========================= */
+:root{
+--brand:#163491;      /* biru utama */
+--brand-2:#0c4a6e;    /* biru-teal sekunder */
+--accent:#f5b301;     /* kuning CTA */
+--accent-2:#f6b20a;   /* kuning header tabel/subnav */
+--bg:#f7f9fb;         /* latar */
+--text:#222;          /* teks utama */
+--muted:#6b7280;
+--white:#ffffff;
+--shadow:0 6px 16px rgba(0,0,0,.08);
+--radius:12px;
+--danger:#dc3545;
+--success:#16a34a;
+}
+
+*{ box-sizing:border-box }
+html,body{ height:100% }
+body{
+margin:0;
+font-family:"Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+color:var(--text);
+background:var(--bg);
+display:flex;
+flex-direction:column;
+min-height:100vh;
+-webkit-font-smoothing:antialiased;
+-moz-osx-font-smoothing:grayscale;
+}
+
+.wrap,
+.container{
+width:min(1200px, 94%);
+margin-inline:auto;
+}
+
+/* =========================
+  HEADER (logo tengah)
+  ========================= */
+.header{
+background:var(--white);
+border-bottom:1px solid #e5e5e5;
+}
+.header .wrap{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:24px;
+padding:20px 16px;
+}
+.header img{
+display:block;
+max-height:85px;
+width:auto;
+height:auto;
+object-fit:contain;
+}
+
+/* =========================
+  NAVBAR (spasi lega)
+  ========================= */
+.navbar{
+background:var(--brand);
+box-shadow:0 2px 6px rgba(0,0,0,.04);
+}
+.navbar .wrap{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:32px;
+padding:14px 18px;
+}
+.navbar a{
+color:#fff;
+font-weight:700;
+text-decoration:none;
+letter-spacing:.2px;
+padding:6px 10px;
+border-radius:8px;
+transition:color .2s ease, background .2s ease, transform .06s ease;
+outline:0;
+font-size:clamp(13px, 1.6vw, 15px);
+}
+.navbar a:hover{ background:rgba(255,255,255,.12); }
+.navbar a:active{ transform:translateY(1px); }
+.navbar a:focus-visible{
+outline:2px solid #fff; outline-offset:2px;
+background:rgba(255,255,255,.16);
+}
+
+/* =========================
+  CARD & TYPO
+  ========================= */
+.card{
+background:var(--white);
+border-radius:var(--radius);
+box-shadow:var(--shadow);
+border:1px solid #e5e5e5;
+padding:18px;
+}
+
+h2{
+margin:0 0 8px;
+color:var(--brand-2);
+font-size:clamp(20px, 2.2vw, 28px);
+}
+h3{
+margin:0 0 10px;
+color:#1f2937;
+font-size:clamp(16px, 2vw, 20px);
+}
+.muted{ color:var(--muted); }
+
+/* =========================
+  ALERT
+  ========================= */
+.alert{
+margin:12px 0 0;
+padding:10px 12px;
+font-size:14px;
+border-radius:10px;
+border:1px solid transparent;
+}
+.alert.ok{  background:#e8fff0; color:#0b7a2e; border-color:#baf2cd; }
+.alert.err{ background:#ffecec; color:#b00020; border-color:#ffb9c0; }
+
+/* =========================
+  FORM
+  ========================= */
+.grid-2{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+label{
+display:block;
+font-size:14px;
+color:#374151;
+margin:0 0 6px;
+}
+input[type="text"],
+input[type="date"],
+select{
+width:100%;
+padding:10px 12px;
+font-size:14px;
+background:#fff;
+border:1px solid #dfe3eb;
+border-radius:10px;
+outline:0;
+transition:border .2s ease, box-shadow .2s ease;
+}
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus{
+border-color:#b9c4ff;
+box-shadow:0 0 0 3px rgba(22,52,145,.18);
+}
+
+.actions{
+display:flex;
+align-items:center;
+gap:10px;
+margin-top:12px;
+}
+
+/* Buttons */
+.btn{
+appearance:none;
+border:none;
+border-radius:10px;
+padding:10px 14px;
+font-weight:700;
+cursor:pointer;
+text-decoration:none;
+display:inline-block;
+transition:transform .06s ease, opacity .2s ease, background .2s ease, color .2s ease;
+background:var(--accent);
+color:#111;
+}
+.btn:hover{ opacity:.95; box-shadow:0 2px 10px rgba(245,179,1,.25); }
+.btn:active{ transform:translateY(1px); }
+.btn.danger{ background:var(--danger); color:#fff; }
+.btn.ghost{
+background:#fff; color:var(--brand);
+border:1px solid var(--brand);
+}
+.btn.ghost:hover{ background:#eef6ff; }
+
+/* =========================
+  TABLE (card-like + sticky thead)
+  ========================= */
+.table{
+width:100%;
+border-collapse:collapse;
+background:#fff;
+border-radius:12px;
+overflow:hidden;
+box-shadow:var(--shadow);
+border:1px solid #e5e5e5;
+}
+.table thead th{
+position:sticky; top:0; z-index:1;
+background:var(--accent-2);   /* kuning header tabel */
+color:#fff;
+font-weight:800;
+text-align:left;
+}
+.table th, .table td{
+padding:14px 16px;
+border-bottom:1px solid #e5e5e5;
+vertical-align:top;
+text-align:left;
+font-size:15px;
+}
+.table tbody tr:nth-child(even){ background:#eef6ff; }
+.table tbody tr:hover{ background:#e8f2ff; }
+
+/* kolom lebar tetap */
+.actions{
+display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+}
+.actions form{ display:inline; }
+
+/* =========================
+  FOOTER
+  ========================= */
+.footer{
+margin-top:auto;
+padding:22px 16px;
+background:var(--brand);
+color:#fff;
+text-align:center;
+font-size:14px;
+line-height:1.6;
+}
+.footer small{ display:block; opacity:.9; }
+
+/* =========================
+  RESPONSIVE
+  ========================= */
+@media (max-width: 900px){
+.grid-2{ grid-template-columns:1fr; }
+}
+@media (max-width: 820px){
+.header .wrap{ gap:14px; padding:16px 12px; }
+.header img{ max-height:70px; }
+.navbar .wrap{ gap:18px; padding:12px; }
+.table th, .table td{ padding:12px; font-size:14px; }
+}
+@media (max-width: 520px){
+.navbar .wrap{ flex-wrap:wrap; gap:12px; }
+.navbar a{ padding:6px 8px; font-weight:600; }
+.header img{ max-height:60px; }
+}

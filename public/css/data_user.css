@@ -1,0 +1,215 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 15px 0;
+}
+nav a {
+    text-decoration: none;
+    padding: 5px 10px;
+}
+.nav-atas {
+    background-color: #f5b301;
+    color: white;
+}
+.nav-atas a {
+    color: white;
+}
+a.tambah-user {
+    display: inline-block;
+    margin: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+a.tambah-user:hover {
+    background-color: #0056b3;
+}
+table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: white;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 12px 15px;
+    text-align: left;
+}
+th {
+    background-color: #1a1c1fff;
+    color: white;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+td .action-btn {
+display: inline-block;
+margin-right: 8px;
+padding: 6px 10px;
+font-size: 14px;
+text-decoration: none;
+border-radius: 4px;
+font-weight: bold;
+}
+td .edit {
+background-color: #f6b20a;  
+color: #111;
+}
+td .reset {
+background-color: #dc3545;  
+color: #fff;
+}
+td .action-btn:hover {
+opacity: 0.85;
+}
+footer {
+    background-color: #020381ff;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    font-size: 14px;
+    line-height: 1.5;
+    }
+    footer h3 {
+    margin: 0 0 10px;
+    }
+
+.btn {
+display: inline-block;
+padding: 8px 16px;
+border-radius: 6px;
+font-size: 0.95rem;
+font-weight: 600;
+text-decoration: none;
+text-align: center;
+cursor: pointer;
+border: 1px solid transparent;
+transition: all 0.25s ease;
+line-height: 1.4;
+}
+
+.btn:hover {
+opacity: 0.9;
+transform: translateY(-2px);
+box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+}
+
+.btn-sm {
+padding: 6px 12px;
+font-size: 0.85rem;
+}
+
+.btn-primary {
+background: #2563eb;  
+color: #fff;
+}
+
+.btn-warning {
+background: #facc15;  
+color: #111;
+}
+
+.btn-danger {
+background: #dc2626;  
+color: #fff;
+}
+
+.btn-ghost {
+background: #fff;
+border: 1px solid #e5e7eb;
+color: #111;
+}
+
+.actions {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+margin: 16px 0;
+}
+
+.kembali {
+display: inline-block;
+padding: 8px 16px;
+border-radius: 6px;
+font-size: 0.95rem;
+font-weight: 600;
+background: #fff;
+border: 1px solid #e5e7eb;
+color: #111 !important;
+text-decoration: none;
+transition: all .25s ease;
+margin-right: auto;
+}
+.kembali:hover {
+opacity: .9;
+transform: translateY(-2px);
+box-shadow: 0 3px 6px rgba(0,0,0,.12);
+}
+
+.tambah-user {
+display: inline-block;
+padding: 8px 16px;
+border-radius: 6px;
+font-size: 0.95rem;
+font-weight: 600;
+background: #2563eb;
+color: #fff !important;
+text-decoration: none;
+transition: all .25s ease;
+}
+.tambah-user:hover {
+opacity: .9;
+transform: translateY(-2px);
+box-shadow: 0 3px 6px rgba(0,0,0,.12);
+}
+
+table td a[href*="edit_user.php"] {
+display: inline-block;
+padding: 6px 10px;
+border-radius: 6px;
+font-size: 13px;
+font-weight: 600;
+background: #facc15;
+color: #111 !important;
+text-decoration: none;
+transition: all .25s ease;
+margin-right: 6px;
+}
+table td a[href*="reset_password.php"] {
+display: inline-block;
+padding: 6px 10px;
+border-radius: 6px;
+font-size: 13px;
+font-weight: 600;
+background: #dc2626;
+color: #fff !important;
+text-decoration: none;
+transition: all .25s ease;
+}
+table td a[href*="edit_user.php"]:hover,
+table td a[href*="reset_password.php"]:hover {
+opacity: .9;
+transform: translateY(-2px);
+box-shadow: 0 3px 6px rgba(0,0,0,.12);
+}
+
+.button-container {
+width: 90%;
+margin: 16px auto 10px;
+display: flex;
+gap: 12px;
+align-items: center;
+justify-content: flex-start;
+padding-left: 40px; /* geser semua tombol ke kanan */
+}

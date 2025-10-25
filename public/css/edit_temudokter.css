@@ -1,0 +1,178 @@
+/* =============================
+GLOBAL LAYOUT
+============================= */
+body {
+font-family: 'Segoe UI', sans-serif;
+background-color: #f4f6f9;
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+}
+
+/* =============================
+HEADER
+============================= */
+.header {
+background-color: white;
+padding: 20px;
+border-bottom: 2px solid #002080;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.header img {
+max-height: 85px;
+width: auto;
+}
+
+/* =============================
+NAVIGATION
+============================= */
+nav {
+background-color: #f5b301;
+padding: 15px;
+display: flex;
+justify-content: center;
+gap: 30px;
+}
+nav a {
+color: white;
+text-decoration: none;
+font-weight: bold;
+transition: color 0.3s;
+}
+nav a:hover {
+color: #ff9900;
+}
+
+/* =============================
+MAIN CONTENT
+============================= */
+.wrap {
+flex: 1;
+display: flex;
+flex-direction: column;
+gap: 20px;
+padding: 30px;
+max-width: 1100px;
+margin: 0 auto;
+}
+
+.panel {
+background: #fff;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.panel h2 {
+margin-top: 0;
+color: #0c5b2c;
+}
+
+/* =============================
+FORM
+============================= */
+form.row {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+align-items: center;
+}
+
+select, input[type="text"], input[type="email"], input[type="password"], textarea {
+padding: 8px 12px;
+border: 1px solid #ccc;
+border-radius: 6px;
+font-size: 14px;
+flex: 1;
+min-width: 220px;
+}
+
+button {
+background-color: #0c5b2c;
+color: white;
+border: none;
+border-radius: 6px;
+padding: 8px 16px;
+font-size: 14px;
+cursor: pointer;
+transition: background 0.3s;
+}
+button:hover {
+background-color: #094a22;
+}
+
+/* khusus tombol batal */
+button[style*="background:#b42318"] {
+background-color: #b42318;
+}
+button[style*="background:#b42318"]:hover {
+background-color: #891a12;
+}
+
+/* =============================
+BADGE STATUS / FLASH
+============================= */
+.badge {
+display: inline-block;
+padding: 6px 12px;
+border-radius: 6px;
+font-size: 13px;
+font-weight: 600;
+margin-top: 10px;
+}
+.badge.ok, .status-1 {
+background: #d4f5d4;
+color: #0c5b2c;
+}
+.badge.err, .status-2 {
+background: #fddddd;
+color: #b42318;
+}
+.status-0 {
+background: #fff3cd;
+color: #856404;
+}
+
+/* =============================
+TABLE
+============================= */
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 15px;
+font-size: 14px;
+}
+table th, table td {
+border: 1px solid #ddd;
+padding: 10px;
+text-align: center;
+}
+table th {
+background-color: #f5b301;
+color: white;
+}
+table tr:nth-child(even) {
+background-color: #fafafa;
+}
+table tr:hover {
+background-color: #f1f1f1;
+}
+
+/* =============================
+FOOTER
+============================= */
+footer {
+background-color: rgb(2, 3, 129);
+color: white;
+text-align: center;
+padding: 18px;
+font-size: 14px;
+margin-top: auto;
+}
+footer h3 {
+margin: 0 0 8px;
+}

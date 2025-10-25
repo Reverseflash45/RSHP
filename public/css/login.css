@@ -1,0 +1,64 @@
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 14px;
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #409eff;
+            box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            background-color: #0d6efd;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background-color: #0b5ed7;
+        }
+        .remember {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .register {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 13px;
+        }

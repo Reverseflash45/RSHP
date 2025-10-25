@@ -1,0 +1,260 @@
+/* ==========================
+DATA PEMILIK (ADMIN PANEL)
+========================== */
+
+:root {
+--biru-tua: #001a6e;
+--biru: #0c4a6e;
+--kuning: #f5b301;
+--putih: #fff;
+--abu: #f4f6f9;
+--border: #e0e0e0;
+--radius: 12px;
+--shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+--wrap: min(1100px, 92%);
+}
+
+/* ===== BASE ===== */
+body {
+font-family: 'Segoe UI', sans-serif;
+background-color: var(--abu);
+color: #222;
+margin: 0;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+}
+
+.header {
+background-color: var(--putih);
+padding: 20px 0;
+border-bottom: 2px solid var(--biru-tua);
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.header img {
+max-height: 80px;
+width: auto;
+}
+
+nav {
+background-color: var(--kuning);
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav .wrap {
+width: var(--wrap);
+margin: 0 auto;
+display: flex;
+justify-content: center;
+gap: 30px;
+padding: 15px 0;
+}
+
+nav a {
+text-decoration: none;
+font-weight: bold;
+color: #111;
+font-size: 1rem;
+transition: color 0.2s;
+}
+
+nav a:hover {
+color: var(--biru-tua);
+}
+
+/* ===== CONTENT ===== */
+.wrap {
+width: var(--wrap);
+margin: 30px auto;
+}
+
+h2 {
+color: var(--biru);
+margin-bottom: 16px;
+}
+
+/* ===== FORM TAMBAH PEMILIK ===== */
+.card {
+background-color: var(--putih);
+padding: 25px 30px;
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+margin-bottom: 30px;
+}
+
+.card h3 {
+margin: 0 0 12px;
+color: var(--biru);
+}
+
+.form-row {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 14px;
+}
+
+.form-row label {
+font-weight: 600;
+font-size: 0.9rem;
+display: block;
+margin-bottom: 4px;
+}
+
+.form-row input {
+width: 100%;
+padding: 10px 12px;
+border: 1px solid #ddd;
+border-radius: 8px;
+transition: border 0.2s, box-shadow 0.2s;
+}
+
+.form-row input:focus {
+border-color: var(--biru);
+box-shadow: 0 0 0 3px rgba(0, 64, 128, 0.2);
+outline: none;
+}
+
+.actions {
+margin-top: 18px;
+display: flex;
+gap: 10px;
+}
+
+.btn {
+border: none;
+padding: 10px 16px;
+font-weight: bold;
+border-radius: 6px;
+cursor: pointer;
+transition: 0.2s;
+}
+
+.btn.primary {
+background-color: var(--kuning);
+color: #111;
+}
+
+.btn.primary:hover {
+background-color: #e5a800;
+}
+
+.btn.ghost {
+border: 2px solid var(--kuning);
+color: var(--kuning);
+background: transparent;
+}
+
+.btn.ghost:hover {
+background: var(--kuning);
+color: #111;
+}
+
+/* ===== ALERT ===== */
+.msg {
+padding: 12px 15px;
+border-radius: 8px;
+font-weight: 500;
+margin-bottom: 20px;
+}
+
+.msg.ok {
+background-color: #e9ffec;
+color: #166534;
+border: 1px solid #a4e4b8;
+}
+
+.msg.err {
+background-color: #ffe8e8;
+color: #a50000;
+border: 1px solid #ffb3b3;
+}
+
+/* ===== TABLE ===== */
+table {
+width: 100%;
+border-collapse: collapse;
+background-color: var(--putih);
+border-radius: var(--radius);
+overflow: hidden;
+box-shadow: var(--shadow);
+}
+
+th, td {
+padding: 12px 15px;
+text-align: left;
+border-bottom: 1px solid #eee;
+}
+
+thead th {
+background-color: var(--kuning);
+color: #111;
+font-weight: bold;
+}
+
+tbody tr:nth-child(even) {
+background-color: #fafafa;
+}
+
+tbody tr:hover {
+background-color: #f1f8ff;
+}
+
+td form {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+align-items: center;
+}
+
+td form input {
+padding: 6px 8px;
+border-radius: 6px;
+border: 1px solid #ccc;
+font-size: 0.9rem;
+}
+
+td form input:focus {
+border-color: var(--biru);
+outline: none;
+}
+
+/* ===== FOOTER ===== */
+footer {
+background-color: var(--biru-tua);
+color: var(--putih);
+text-align: center;
+padding: 20px;
+margin-top: auto;
+font-size: 0.9rem;
+}
+
+footer h3 {
+margin: 0 0 5px;
+font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+.form-row {
+grid-template-columns: repeat(2, 1fr);
+}
+
+td form {
+flex-direction: column;
+align-items: stretch;
+}
+}
+
+@media (max-width: 600px) {
+.form-row {
+grid-template-columns: 1fr;
+}
+
+nav .wrap {
+flex-direction: column;
+gap: 12px;
+}
+}

@@ -1,0 +1,190 @@
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: Arial, sans-serif;
+}
+
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background-color: #f9f9f9;
+color: #333;
+}
+
+.header {
+background: #fff;
+padding: 10px;
+text-align: center;
+}
+.header img {
+height: 80px;
+}
+
+nav {
+display: flex;
+justify-content: center;
+gap: 30px;
+padding: 15px 0;
+background-color: #f5b301;
+}
+nav a {
+text-decoration: none;
+padding: 5px 10px;
+color: white;
+font-weight: bold;
+}
+nav a:hover {
+text-decoration: underline;
+}
+
+.main {
+max-width: 1000px;
+margin: 20px auto;
+padding: 0 20px;
+}
+
+.panel {
+background: #fff;
+padding: 18px 20px;
+border-radius: 10px;
+box-shadow: 0 2px 8px rgba(0,0,0,.08);
+margin: 20px auto;
+max-width: 840px;
+}
+.panel h3 {
+margin-bottom: 12px;
+font-size: 1.1rem;
+font-weight: 700;
+color: #1f2937;
+}
+.panel form {
+display: grid;
+grid-template-columns: 260px 1fr auto;
+gap: 12px;
+align-items: center;
+max-width: 620px;
+margin: 0 auto;
+}
+.panel select,
+.panel input[type="text"] {
+height: 40px;
+padding: 8px 10px;
+border: 1px solid #d1d5db;
+border-radius: 8px;
+outline: none;
+width: 100%;
+}
+.panel input[type="text"]::placeholder {
+color: #9ca3af;
+}
+.panel button {
+height: 40px;
+padding: 0 16px;
+background-color: #2563eb;
+color: #fff;
+border: none;
+border-radius: 8px;
+font-weight: 700;
+cursor: pointer;
+transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+white-space: nowrap;
+}
+.panel button:hover {
+opacity: .95;
+transform: translateY(-1px);
+box-shadow: 0 4px 10px rgba(0,0,0,.12);
+}
+
+.badge {
+display: inline-block;
+margin-top: 10px;
+padding: 5px 10px;
+border-radius: 4px;
+font-size: 0.9em;
+}
+.badge.ok { background: #d1f5d3; color: #2d7a2f; }
+.badge.err { background: #f9d6d5; color: #a33a36; }
+
+table {
+width: 100%;
+max-width: 840px;
+margin: 0 auto;
+border-collapse: collapse;
+background-color: white;
+border-radius: 6px;
+overflow: hidden;
+box-shadow: 0 2px 5px rgba(0,0,0,.1);
+}
+th, td {
+border: 1px solid #ccc;
+padding: 12px 15px;
+text-align: left;
+vertical-align: middle;
+}
+th {
+background-color: #1a1c1f;
+color: white;
+}
+tr:nth-child(even) {
+background-color: #f2f2f2;
+}
+tr.group td {
+background-color: #eee;
+font-weight: bold;
+}
+
+/* Aksi: baris 1 = Select+Input, baris 2 = tombol Ubah & Hapus sejajar */
+td.actions {
+display: grid;
+grid-template-columns: 260px 1fr;
+grid-template-rows: auto auto;
+column-gap: 8px;
+row-gap: 8px;
+align-items: center;
+}
+td.actions form { margin: 0; }
+td.actions form:first-child { display: contents; }
+td.actions select { grid-column: 1; grid-row: 1; height: 36px; }
+td.actions input[type="text"] { grid-column: 2; grid-row: 1; height: 36px; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px; }
+td.actions form:first-child button {
+grid-column: 1;
+grid-row: 2;
+padding: 8px 14px;
+border-radius: 6px;
+font-size: 13px;
+font-weight: 600;
+border: none;
+background: #f6b20a;
+color: #111;
+cursor: pointer;
+transition: all .25s ease;
+}
+td.actions form:last-child { grid-column: 2; grid-row: 2; }
+td.actions form:last-child button {
+padding: 8px 14px;
+border-radius: 6px;
+font-size: 13px;
+font-weight: 600;
+border: none;
+background: #dc2626;
+color: #fff;
+cursor: pointer;
+transition: all .25s ease;
+}
+td.actions button:hover {
+opacity: .9;
+transform: translateY(-2px);
+box-shadow: 0 3px 6px rgba(0,0,0,.12);
+}
+
+footer {
+background-color: #020381;
+color: white;
+text-align: center;
+padding: 20px;
+margin-top: 30px;
+font-size: 14px;
+line-height: 1.5;
+}
+footer h3 { margin: 0 0 10px; }

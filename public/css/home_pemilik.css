@@ -1,0 +1,151 @@
+:root{
+--biru-tua:#001a6e;
+--biru:#0c4a6e;
+--kuning:#f5b301;
+--abu-bg:#f4f6f9;
+--putih:#fff;
+--teks:#333;
+--shadow:0 4px 16px rgba(0,0,0,.08);
+--radius:14px;
+--wrap:max(720px, min(1100px, 92%));
+}
+
+*{box-sizing:border-box}
+
+html,body{height:100%}
+body{
+font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;
+background:var(--abu-bg);
+color:var(--teks);
+margin:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+/* HEADER */
+.header{
+width:100%;
+background:var(--putih);
+border-bottom:2px solid var(--biru-tua);
+padding:14px 0;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+.header img{
+height:80px;
+max-width:92%;
+object-fit:contain;
+}
+
+/* NAVBAR */
+nav{
+width:100%;
+background:var(--kuning);
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+display:flex;
+justify-content:center;
+gap:34px;
+padding:14px 10px;
+flex-wrap:wrap;
+}
+nav a{
+color:#111;
+text-decoration:none;
+font-weight:700;
+font-size:1rem;
+padding:6px 2px;
+border-bottom:2px solid transparent;
+transition:.2s;
+}
+nav a:hover,
+nav a[aria-current="page"]{
+color:var(--biru-tua);
+border-color:var(--biru-tua);
+}
+
+/* CONTAINER */
+.container{
+width:var(--wrap);
+margin:36px auto 28px;
+display:flex;
+flex-direction:column;
+gap:28px;
+flex:1;
+}
+
+/* CARD (termasuk welcome-box biar rata) */
+.card{
+background:var(--putih);
+width:100%;
+border-radius:var(--radius);
+box-shadow:var(--shadow);
+padding:22px 24px;
+}
+.card h2{
+margin:0 0 14px;
+color:var(--biru);
+font-size:1.35rem;
+text-align:center;
+}
+.card p{margin:8px 0 0;color:#444;text-align:center}
+
+/* WELCOME BOX (bikin sejajar penuh dengan card lainnya) */
+.welcome-box{
+text-align:center;
+padding:28px 30px;
+}
+
+/* TABLE */
+.table{
+width:100%;
+border-collapse:collapse;
+font-size:.96rem;
+overflow:hidden;
+border-radius:12px;
+}
+.table thead th{
+background:var(--kuning);
+color:#111;
+text-align:center;
+font-weight:700;
+padding:12px 10px;
+}
+.table tbody td{
+padding:12px 10px;
+border-bottom:1px solid #e5e7eb;
+text-align:center;
+vertical-align:top;
+}
+.table tbody tr:nth-child(even){background:#fafafa}
+.table tbody tr:hover{background:#eef6ff}
+
+/* LINK DETAIL */
+.detail-link{
+color:var(--biru-tua);
+text-decoration:none;
+font-weight:700;
+}
+.detail-link:hover{text-decoration:underline}
+
+/* FOOTER */
+footer{
+width:100%;
+margin-top:auto;
+background:var(--biru-tua);
+color:#fff;
+text-align:center;
+padding:22px 10px;
+font-size:.92rem;
+}
+footer h3{margin:0 0 6px;font-weight:600}
+
+/* RESPONSIVE */
+@media (max-width:980px){
+:root{--wrap:min(96%,820px);}
+.table{font-size:.92rem}
+}
+@media (max-width:720px){
+nav{gap:18px}
+}

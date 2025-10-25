@@ -1,0 +1,152 @@
+/* Reset dasar */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: Arial, sans-serif;
+}
+
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background-color: #f9f9f9;
+color: #333;
+}
+
+/* Header */
+.header {
+background: #fff;
+padding: 10px;
+text-align: center;
+}
+.header img {
+height: 80px;
+}
+
+/* Navigation */
+nav {
+display: flex;
+justify-content: center;
+gap: 30px;
+padding: 15px 0;
+background-color: #f5b301;
+}
+nav a {
+text-decoration: none;
+padding: 5px 10px;
+color: white;
+font-weight: bold;
+}
+nav a:hover {
+text-decoration: underline;
+}
+
+/* Main */
+.main {
+max-width: 800px;
+margin: 20px auto;
+padding: 0 20px;
+}
+
+/* Panel form tambah jenis */
+.panel {
+background: #fff;
+padding: 15px;
+border-radius: 6px;
+box-shadow: 0 2px 5px rgba(0,0,0,.1);
+margin-bottom: 20px;
+}
+.panel h3 {
+margin-bottom: 10px;
+}
+.panel form {
+display: flex;
+gap: 10px;
+}
+.panel input {
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+flex: 1;
+}
+.panel button {
+padding: 8px 16px;
+background-color: #2563eb;
+color: #fff;
+border: none;
+border-radius: 6px;
+font-weight: 600;
+cursor: pointer;
+transition: all .25s ease;
+}
+.panel button:hover {
+opacity: .9;
+transform: translateY(-2px);
+box-shadow: 0 3px 6px rgba(0,0,0,.12);
+}
+
+/* Badge notif */
+.badge {
+display: inline-block;
+margin-top: 10px;
+padding: 5px 10px;
+border-radius: 4px;
+font-size: 0.9em;
+}
+.badge.ok { background: #d1f5d3; color: #2d7a2f; }
+.badge.err { background: #f9d6d5; color: #a33a36; }
+
+/* Table */
+table {
+width: 100%;
+border-collapse: collapse;
+background-color: white;
+border-radius: 6px;
+overflow: hidden;
+box-shadow: 0 2px 5px rgba(0,0,0,.1);
+}
+th, td {
+border: 1px solid #ccc;
+padding: 12px 15px;
+text-align: left;
+}
+th {
+background-color: #1a1c1f;
+color: white;
+}
+tr:nth-child(even) {
+background-color: #f2f2f2;
+}
+
+/* Tombol di tabel */
+td.actions form {
+display: inline-block;
+}
+td.actions button {
+padding: 6px 10px;
+border-radius: 6px;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+border: none;
+transition: all .25s ease;
+background: #dc2626; /* tombol hapus */
+color: #fff;
+}
+td.actions button:hover {
+opacity: .9;
+transform: translateY(-2px);
+box-shadow: 0 3px 6px rgba(0,0,0,.12);
+}
+
+/* Footer */
+footer {
+background-color: #020381;
+color: white;
+text-align: center;
+padding: 20px;
+margin-top: 30px;
+font-size: 14px;
+line-height: 1.5;
+}
+footer h3 { margin: 0 0 10px; }

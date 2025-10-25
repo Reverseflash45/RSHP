@@ -1,0 +1,177 @@
+/* ==========================
+HOME DOKTER — STYLE MIRIP HEADER RSHP LAIN
+========================== */
+
+body {
+font-family: 'Segoe UI', sans-serif;
+background-color: #f4f6f9;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+margin: 0;
+}
+
+/* ===== HEADER ===== */
+.header {
+background-color: white;
+padding: 20px;
+display: flex;
+align-items: center;
+justify-content: center;   /* ⬅️ ini kuncinya */
+border-bottom: 2px solid #002080;
+}
+
+
+.header img {
+max-height: 85px;
+width: auto;
+display: block;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+background-color: #f5b301;
+padding: 15px;
+display: flex;
+justify-content: center;
+gap: 40px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav a {
+color: white;
+text-decoration: none;
+font-weight: bold;
+font-size: 1rem;
+transition: color 0.3s;
+}
+
+nav a:hover {
+color: #ff9900;
+}
+
+/* ===== CONTENT ===== */
+.content {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 50px 20px;
+gap: 40px;
+}
+
+/* Welcome Box */
+.welcome-box {
+background-color: white;
+padding: 40px;
+border-radius: 10px;
+box-shadow: 0 4px 15px #0000001a;
+text-align: center;
+max-width: 700px;
+width: 100%;
+}
+
+.welcome-box h2 {
+color: #0c5b2cff;
+margin-bottom: 10px;
+}
+
+.welcome-box p {
+font-size: 1.1rem;
+color: #333;
+}
+
+/* ===== SECTION BOXES ===== */
+.section {
+background-color: white;
+padding: 30px 40px;
+border-radius: 10px;
+box-shadow: 0 4px 15px #0000001a;
+width: 100%;
+max-width: 1000px;
+}
+
+.section h2 {
+color: #0c5b2cff;
+text-align: center;
+margin-top: 0;
+margin-bottom: 20px;
+}
+
+/* ===== TABLE ===== */
+.table-container {
+overflow-x: auto;
+margin-top: 15px;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+text-align: center;
+font-size: 0.95rem;
+}
+
+th, td {
+padding: 12px 10px;
+border-bottom: 1px solid #ddd;
+}
+
+th {
+background-color: #f5b301;
+color: white;
+font-weight: bold;
+}
+
+tr:nth-child(even) {
+background-color: #fafafa;
+}
+
+tr:hover {
+background-color: #eef5ff;
+}
+
+a.detail-link {
+color: #002080;
+text-decoration: none;
+font-weight: bold;
+}
+
+a.detail-link:hover {
+text-decoration: underline;
+}
+
+/* ===== FOOTER ===== */
+footer {
+background-color: rgb(2, 3, 129);
+color: white;
+text-align: center;
+padding: 20px;
+font-size: 14px;
+line-height: 1.6;
+margin-top: auto;
+}
+
+footer h3 {
+margin: 0 0 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+.header {
+flex-direction: column;
+gap: 10px;
+}
+
+nav {
+flex-wrap: wrap;
+gap: 20px;
+}
+
+.section {
+padding: 20px;
+}
+
+table th, table td {
+font-size: 0.85rem;
+}
+}

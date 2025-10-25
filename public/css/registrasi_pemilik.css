@@ -1,0 +1,137 @@
+body {
+font-family: 'Segoe UI', sans-serif;
+background-color: #f4f6f9;
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+.header {
+background-color: white;
+padding: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-bottom: 2px solid #002080;
+}
+.header img {
+max-height: 85px;
+width: auto;
+}
+
+/* ================= NAV ================= */
+.nav-atas {
+background-color: #f5b301;
+padding: 15px;
+display: flex;
+justify-content: center;
+gap: 30px;
+}
+.nav-atas a {
+color: white;
+text-decoration: none;
+font-weight: bold;
+transition: color 0.3s;
+}
+.nav-atas a:hover {
+color: #ff9900;
+}
+
+/* ================= WRAPPER FORM ================= */
+.user-wrapper {
+flex: 1;
+max-width: 720px;
+margin: 40px auto;
+background: white;
+padding: 30px;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.user-wrapper h2 {
+margin-top: 0;
+margin-bottom: 20px;
+color: #0c5b2c;
+text-align: center;
+}
+
+/* ================= FORM ================= */
+label {
+font-weight: 600;
+display: block;
+margin-top: 12px;
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 8px;
+margin-top: 6px;
+font-size: 15px;
+}
+textarea {
+resize: vertical;
+}
+
+.button-dua {
+background: #020381;
+color: white;
+border: none;
+padding: 10px 16px;
+border-radius: 8px;
+cursor: pointer;
+font-weight: 600;
+transition: background 0.3s;
+}
+.button-dua:hover {
+background: #333399;
+}
+.aksi-linkdua {
+margin-left: 10px;
+text-decoration: none;
+padding: 10px 16px;
+border-radius: 8px;
+background: #6c757d;
+color: white;
+font-weight: 600;
+transition: background 0.3s;
+}
+.aksi-linkdua:hover {
+background: #5a6268;
+}
+
+/* ================= BADGE (NOTIFIKASI) ================= */
+.badge {
+display: inline-block;
+padding: 8px 12px;
+border-radius: 10px;
+font-size: 14px;
+margin-bottom: 12px;
+}
+.ok {
+background: #e8f8ee;
+color: #0b7a2e;
+}
+.err {
+background: #ffecec;
+color: #b00020;
+}
+
+/* ================= FOOTER ================= */
+footer {
+background-color: #020381;
+color: white;
+text-align: center;
+padding: 20px;
+margin-top: auto;
+font-size: 14px;
+line-height: 1.6;
+}
+footer h3 {
+margin: 0 0 10px;
+}

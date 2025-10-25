@@ -1,0 +1,173 @@
+body {
+font-family: 'Segoe UI', sans-serif;
+background-color: #f4f6f9;
+display: flex;
+flex-direction: column;
+min-height: 100vh;
+margin: 0;
+}
+
+/* ================= NAV ================= */
+nav {
+background-color: #f5b301;
+padding: 15px;
+display: flex;
+justify-content: center;
+gap: 30px;
+}
+
+nav a {
+color: white;
+text-decoration: none;
+font-weight: bold;
+transition: color 0.3s;
+}
+
+nav a:hover {
+color: #ff9900;
+}
+
+/* ================= HEADER ================= */
+.header {
+background-color: white;
+padding: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-bottom: 2px solid #002080;
+}
+
+.header img {
+max-height: 85px;
+width: auto;
+display: block;
+margin: 0 auto;
+}
+
+/* ================= FOOTER ================= */
+footer {
+background-color: rgb(2, 3, 129);
+color: white;
+text-align: center;
+padding: 20px;
+margin-top: auto;
+font-size: 14px;
+line-height: 1.6;
+}
+
+footer h3 {
+margin: 0 0 10px;
+}
+
+/* ================= FORM ================= */
+.form-wrap {
+flex: 1;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items: center;
+padding: 40px 20px;
+}
+
+.form-wrap h3 {
+color: #0c5b2c;
+margin-bottom: 20px;
+text-align: center;
+}
+
+form {
+background-color: white;
+padding: 30px 40px;
+border-radius: 10px;
+box-shadow: 0 4px 15px #0000001a;
+width: 100%;
+max-width: 600px;
+}
+
+label {
+display: block;
+font-weight: bold;
+margin: 15px 0 5px;
+color: #333;
+}
+
+input[type="text"],
+textarea {
+width: 100%;
+padding: 12px;
+border: 1px solid #ccc;
+border-radius: 6px;
+font-size: 1rem;
+transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+border-color: #0c5b2c;
+outline: none;
+}
+
+textarea {
+min-height: 100px;
+resize: vertical;
+}
+
+.actions {
+margin-top: 20px;
+display: flex;
+justify-content: flex-end;
+gap: 15px;
+}
+
+button.btn,
+a.btn {
+padding: 12px 20px;
+border: none;
+border-radius: 6px;
+font-size: 1rem;
+cursor: pointer;
+font-weight: bold;
+text-decoration: none;
+transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Tombol utama */
+button.btn {
+background-color: #0c5b2c;
+color: white;
+}
+
+button.btn:hover {
+background-color: #0a4a24;
+transform: translateY(-2px);
+}
+
+/* Tombol batal */
+a.btn.secondary {
+background-color: #ccc;
+color: #333;
+}
+
+a.btn.secondary:hover {
+background-color: #aaa;
+transform: translateY(-2px);
+}
+
+/* ================= FLASH MESSAGE ================= */
+.badge {
+padding: 12px 18px;
+margin-bottom: 20px;
+border-radius: 6px;
+font-weight: bold;
+text-align: center;
+}
+
+.badge.ok {
+background-color: #d1f7d6;
+color: #0c5b2c;
+}
+
+.badge.err {
+background-color: #ffd1d1;
+color: #a10000;
+}
