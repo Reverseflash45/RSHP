@@ -16,13 +16,13 @@ class isPemilik
             return redirect()->route('login');
         }
 
-        // Ambil role aktif dari pivot. Ubah angka 5 jika mappingmu beda.
-        $roleId = (int) DB::table('user_role')
+        $roleAct = DB::table('role_user')
             ->where('iduser', Auth::id())
             ->where('status', 1)
             ->value('idrole');
 
-        if ($roleId === 5) {
+        // di dump-mu tadi kelihatannya pemilik itu 5
+        if ((int) $roleAct === 5) {
             return $next($request);
         }
 

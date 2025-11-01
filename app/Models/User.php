@@ -10,14 +10,13 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    // Skema legacy
-    protected $table = 'user';           // tabel kamu memang 'user'
-    protected $primaryKey = 'iduser';    // PK custom
+    // Karena database-mu pakai tabel 'user' (bukan 'users')
+    protected $table = 'user';
+    protected $primaryKey = 'iduser';
     public $timestamps = false;
     public $incrementing = true;
     protected $keyType = 'int';
 
-    // Kolom-kolom yang wajar di legacy
     protected $fillable = [
         'nama',
         'email',
@@ -32,14 +31,15 @@ class User extends Authenticatable
 
     protected $casts = [
         'iduser' => 'integer',
-        'nama'   => 'string',
-        'email'  => 'string',
     ];
 
-    // Relasi role via pivot user_role {iduser, idrole, status}
+    /**
+     * Relasi ke role.
+     * PENTING: di DB kamu namanya 'role_user' (bukan 'user_role')
+     */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'user_role', 'iduser', 'idrole')
+        return $this->belongsToMany(Role::class, 'role_user', 'iduser', 'idrole')
                     ->withPivot(['status']);
     }
 }

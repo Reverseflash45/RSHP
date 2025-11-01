@@ -7,112 +7,190 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    // ini gak terlalu kepake krn kita redirect per-role
     protected $redirectTo = '/home';
 
     public function __construct()
     {
+        // yang belum login boleh akses login
         $this->middleware('guest')->except('logout');
+        // cuma yang udah login yang boleh logout
         $this->middleware('auth')->only('logout');
     }
 
     public function showLoginForm()
     {
+        // pake view login yang tadi kamu kirim
         return view('auth.login');
     }
 
     public function login(Request $request)
     {
-        // 1) Validasi input
+        /*
+        |--------------------------------------------------------------------------
+        | 1. Validasi input
+        |--------------------------------------------------------------------------
+        */
         $validator = Validator::make($request->all(), [
-            'email'    => 'required|string', // bisa email atau username
+            'email'    => 'required|string',   // boleh email, boleh nama
             'password' => 'required|min:6',
         ]);
+
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        // 2) Tentukan identifier: email atau nama
+        /*
+        |--------------------------------------------------------------------------
+        | 2. Pastikan tabel 'user' memang ada
+        |--------------------------------------------------------------------------
+        */
+        if (! Schema::hasTable('user')) {
+            return back()->withErrors([
+                'login' => 'Tabel "user" tidak ditemukan di database. Periksa nama tabel.'
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | 3. Cari user di tabel 'user' pakai MODEL (bukan DB::table)
+        |--------------------------------------------------------------------------
+        | kalau input berupa email, kita cari by email
+        | kalau bukan email, kita anggap itu nama
+        */
         $identifier = $request->input('email');
-        $byEmail    = filter_var($identifier, FILTER_VALIDATE_EMAIL) !== false;
+        $isEmail    = filter_var($identifier, FILTER_VALIDATE_EMAIL);
 
-        // 3) Cari user via Eloquent (lebih aman dari DB::table langsung)
-        //    Pastikan tabel & kolom ada supaya tidak meledak di first()
-        if (!Schema::hasTable('user')) {
-            return back()->withErrors(['email' => 'Tabel "user" tidak ditemukan. Periksa koneksi/skema DB.']);
-        }
-        $query = User::query();
-        if ($byEmail && Schema::hasColumn('user', 'email')) {
-            $query->where('email', $identifier);
+        // mulai query dari model
+        $userQuery = User::query();
+
+        if ($isEmail && Schema::hasColumn('user', 'email')) {
+            $userQuery->where('email', $identifier);
         } else {
-            // fallback: coba kolom 'nama' jika login tidak pakai email
-            if (!Schema::hasColumn('user', 'nama')) {
-                return back()->withErrors(['email' => 'Kolom login tidak valid (email/nama tidak ada di tabel user).']);
+            // login pakai nama
+            if (! Schema::hasColumn('user', 'nama')) {
+                return back()->withErrors([
+                    'login' => 'Kolom "nama" tidak ada di tabel user, tidak bisa login pakai nama.'
+                ])->withInput();
             }
-            $query->where('nama', $identifier);
+
+            $userQuery->where('nama', $identifier);
         }
 
-        /** @var User|null $user */
-        $user = $query->first();
-        if (!$user) {
-            return back()->withErrors(['email' => 'Akun tidak ditemukan.'])->withInput();
+        /** @var \App\Models\User|null $user */
+        $user = $userQuery->first();
+
+        if (! $user) {
+            return back()->withErrors([
+                'email' => 'Akun tidak ditemukan.'
+            ])->withInput();
         }
 
-        // 4) Verifikasi password hash
-        if (!Hash::check($request->input('password'), $user->password)) {
-            return back()->withErrors(['password' => 'Password salah.'])->withInput();
+        /*
+        |--------------------------------------------------------------------------
+        | 4. Cek password
+        |--------------------------------------------------------------------------
+        */
+        if (! Hash::check($request->input('password'), $user->password)) {
+            return back()->withErrors([
+                'password' => 'Password salah.'
+            ])->withInput();
         }
 
-        // 5) Ambil role aktif via pivot jika tabelnya ada
-        $roleId = 0;
+        /*
+        |--------------------------------------------------------------------------
+        | 5. Ambil role aktif dari pivot `role_user`
+        |--------------------------------------------------------------------------
+        | tabelmu: role_user (bukan user_role)
+        | kolom: iduser, idrole, status
+        */
+        $roleId   = 0;
         $roleName = 'User';
         $roleStat = 0;
 
-        if (Schema::hasTable('user_role') && Schema::hasTable('role')) {
-            $pivot = DB::table('user_role')
+        if (Schema::hasTable('role_user')) {
+            $pivot = DB::table('role_user')
                 ->where('iduser', $user->iduser)
                 ->where('status', 1)
                 ->first();
 
-            $roleId   = (int) ($pivot->idrole ?? 0);
-            $roleName = DB::table('role')->where('idrole', $roleId)->value('nama_role') ?? 'User';
-            $roleStat = (int) ($pivot->status ?? 0);
+            if ($pivot) {
+                $roleId   = (int) $pivot->idrole;
+                $roleStat = (int) $pivot->status;
+
+                // ambil nama rolenya
+                if (Schema::hasTable('role')) {
+                    $roleName = DB::table('role')
+                        ->where('idrole', $roleId)
+                        ->value('nama_role') ?? 'User';
+                }
+            }
         }
 
-        // 6) Login guard
-        Auth::login($user, $request->boolean('remember'));
+        /*
+        |--------------------------------------------------------------------------
+        | 6. Login ke guard
+        |--------------------------------------------------------------------------
+        | Ini baris yang tadi meledak.
+        | Pastikan yang dikirim benar2 instance App\Models\User
+        */
+        Auth::guard('web')->login($user, $request->filled('remember'));
+
+        // regenerasi session id biar aman
         $request->session()->regenerate();
 
-        // 7) Simpan session seperti modul
+        /*
+        |--------------------------------------------------------------------------
+        | 7. Simpan session biar Blade bisa akses persis kaya modul
+        |--------------------------------------------------------------------------
+        */
         $request->session()->put([
-            'user_id'         => (int) $user->iduser,
-            'user_name'       => (string) $user->nama,
-            'user_email'      => (string) $user->email,
-            'user_role'       => $roleId,
-            'user_role_name'  => $roleName,
-            'user_status'     => $roleStat,
+            'user_id'        => (int) $user->iduser,
+            'user_name'      => (string) $user->nama,
+            'user_email'     => (string) $user->email,
+            'user_role'      => $roleId,
+            'user_role_name' => $roleName,
+            'user_status'    => $roleStat,
         ]);
 
-        // 8) Redirect sesuai role (1=Admin, 2=Dokter, 3=Perawat, 4=Resepsionis, lainnya=Pemilik)
+        /*
+        |--------------------------------------------------------------------------
+        | 8. Redirect sesuai role
+        |--------------------------------------------------------------------------
+        | mapping dari SQL dump kamu:
+        | 1 = admin
+        | 2 = dokter           (kalau beda, ganti di sini)
+        | 3 = perawat
+        | 4 = resepsionis
+        | 5 = pemilik
+        */
         switch ($roleId) {
-            case 1: return redirect()->route('admin.dashboard')->with('success', 'Login berhasil!');
-            case 2: return redirect()->route('dokter.dashboard')->with('success', 'Login berhasil!');
-            case 3: return redirect()->route('perawat.dashboard')->with('success', 'Login berhasil!');
-            case 4: return redirect()->route('resepsionis.dashboard')->with('success', 'Login berhasil!');
-            default: return redirect()->route('pemilik.dashboard')->with('success', 'Login berhasil!');
+            case 1:
+                return redirect()->route('admin.dashboard')->with('success', 'Login berhasil!');
+            case 2:
+                return redirect()->route('dokter.dashboard')->with('success', 'Login berhasil!');
+            case 3:
+                return redirect()->route('perawat.dashboard')->with('success', 'Login berhasil!');
+            case 4:
+                return redirect()->route('resepsionis.dashboard')->with('success', 'Login berhasil!');
+            case 5:
+            default:
+                return redirect()->route('pemilik.dashboard')->with('success', 'Login berhasil!');
         }
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/')->with('success', 'Logout berhasil!');
+
+        return redirect()->route('site.home')->with('success', 'Logout berhasil.');
     }
 }

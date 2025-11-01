@@ -5,8 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class isAdministrator
 {
@@ -17,7 +17,9 @@ class isAdministrator
         }
 
         $userId  = Auth::id();
-        $roleAct = DB::table('user_role')
+
+        // ubah ke 'role_user'
+        $roleAct = DB::table('role_user')
             ->where('iduser', $userId)
             ->where('status', 1)
             ->value('idrole');
