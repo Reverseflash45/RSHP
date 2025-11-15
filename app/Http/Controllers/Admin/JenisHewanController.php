@@ -7,6 +7,7 @@ use App\Models\JenisHewan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class JenisHewanController extends Controller
 {
@@ -14,12 +15,16 @@ class JenisHewanController extends Controller
     {
         $q = trim((string) $request->get('q', ''));
 
-        $list = JenisHewan::when($q !== '', fn($w) => $w->where('nama_jenis_hewan', 'like', "%{$q}%"))
+        $list = DB::table('jenis_hewan')
+            ->select('idjenis_hewan', 'nama_jenis_hewan')
+            ->when($q !== '', function ($w) use ($q) {
+                $w->where('nama_jenis_hewan', 'like', "%{$q}%");
+            })
             ->orderBy('idjenis_hewan')
             ->paginate(10)
             ->withQueryString();
 
-        return view('rshp.admin.jenis-hewan.index', compact('list'));
+        return view('rshp.admin.jenis-hewan.index', compact('list', 'q'));
     }
 
     public function create()
@@ -29,24 +34,19 @@ class JenisHewanController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nama_jenis_hewan' => ['required','string','max:100', Rule::unique('jenis_hewan','nama_jenis_hewan')],
-        ], [
-            'nama_jenis_hewan.required' => 'Nama jenis tidak boleh kosong.',
-            'nama_jenis_hewan.unique'   => 'Nama jenis sudah ada.',
-        ]);
-
-        $data['nama_jenis_hewan'] = trim($data['nama_jenis_hewan']);
+        $data = $this->validateJenisHewan($request);
 
         try {
-            JenisHewan::create($data);
+            $this->createJenisHewan($data);
         } catch (QueryException $e) {
             return back()->withInput()
-                ->with('type','error')->with('msg','Gagal menambah jenis (mungkin duplikat).');
+                ->with('type', 'error')
+                ->with('msg', 'Gagal menambah jenis (mungkin duplikat).');
         }
 
         return redirect()->route('admin.jenis-hewan.index')
-            ->with('type','success')->with('msg','Jenis hewan berhasil ditambahkan.');
+            ->with('type', 'success')
+            ->with('msg', 'Jenis hewan berhasil ditambahkan.');
     }
 
     public function edit(JenisHewan $jenis_hewan)
@@ -56,27 +56,19 @@ class JenisHewanController extends Controller
 
     public function update(Request $request, JenisHewan $jenis_hewan)
     {
-        $data = $request->validate([
-            'nama_jenis_hewan' => [
-                'required','string','max:100',
-                Rule::unique('jenis_hewan','nama_jenis_hewan')->ignore($jenis_hewan->getKey(), $jenis_hewan->getKeyName()),
-            ],
-        ], [
-            'nama_jenis_hewan.required' => 'Nama jenis tidak boleh kosong.',
-            'nama_jenis_hewan.unique'   => 'Nama jenis sudah ada.',
-        ]);
-
-        $data['nama_jenis_hewan'] = trim($data['nama_jenis_hewan']);
+        $data = $this->validateJenisHewan($request, $jenis_hewan->getKey());
 
         try {
             $jenis_hewan->update($data);
         } catch (QueryException $e) {
             return back()->withInput()
-                ->with('type','error')->with('msg','Gagal mengubah jenis (mungkin duplikat).');
+                ->with('type', 'error')
+                ->with('msg', 'Gagal mengubah jenis (mungkin duplikat).');
         }
 
         return redirect()->route('admin.jenis-hewan.index')
-            ->with('type','success')->with('msg','Jenis hewan berhasil diubah.');
+            ->with('type', 'success')
+            ->with('msg', 'Jenis hewan berhasil diubah.');
     }
 
     public function destroy(JenisHewan $jenis_hewan)
@@ -84,10 +76,57 @@ class JenisHewanController extends Controller
         try {
             $jenis_hewan->delete();
         } catch (QueryException $e) {
-            return back()->with('type','error')->with('msg','Gagal menghapus (terkait data lain).');
+            return back()->with('type', 'error')
+                ->with('msg', 'Gagal menghapus (terkait data lain).');
         }
 
         return redirect()->route('admin.jenis-hewan.index')
-            ->with('type','success')->with('msg','Jenis hewan berhasil dihapus.');
+            ->with('type', 'success')
+            ->with('msg', 'Jenis hewan berhasil dihapus.');
+    }
+
+    protected function formatNamaJenisHewan(string $nama): string
+    {
+        $nama = trim($nama);
+        $nama = strtolower($nama);
+        return ucwords($nama);
+    }
+
+
+    protected function validateJenisHewan(Request $request, ?int $id = null): array
+    {
+        $uniqueRule = Rule::unique('jenis_hewan', 'nama_jenis_hewan');
+
+        if ($id) {
+            $uniqueRule = $uniqueRule->ignore($id, 'idjenis_hewan');
+        }
+
+        $data = $request->validate([
+            'nama_jenis_hewan' => [
+                'required',
+                'string',
+                'max:255',
+                'min:3',
+                $uniqueRule,
+            ],
+        ], [
+            'nama_jenis_hewan.required' => 'Nama jenis hewan wajib diisi.',
+            'nama_jenis_hewan.string'   => 'Nama jenis hewan harus berupa teks.',
+            'nama_jenis_hewan.max'      => 'Nama jenis hewan maksimal 255 karakter.',
+            'nama_jenis_hewan.min'      => 'Nama jenis hewan minimal 3 karakter.',
+            'nama_jenis_hewan.unique'   => 'Nama jenis hewan sudah ada.',
+        ]);
+
+        $data['nama_jenis_hewan'] = $this->formatNamaJenisHewan($data['nama_jenis_hewan']);
+
+        return $data;
+    }
+
+
+    protected function createJenisHewan(array $data): void
+    {
+        DB::table('jenis_hewan')->insert([
+            'nama_jenis_hewan' => $data['nama_jenis_hewan'],
+        ]);
     }
 }
