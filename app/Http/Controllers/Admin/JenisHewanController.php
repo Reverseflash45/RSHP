@@ -24,12 +24,12 @@ class JenisHewanController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('rshp.admin.jenis-hewan.index', compact('list', 'q'));
+        return view('rshp.admin.jenis-hewan.Index', compact('list', 'q'));
     }
 
     public function create()
     {
-        return view('rshp.admin.jenis-hewan.create');
+        return view('rshp.admin.jenis-hewan.tambah-jenis');
     }
 
     public function store(Request $request)
@@ -51,7 +51,7 @@ class JenisHewanController extends Controller
 
     public function edit(JenisHewan $jenis_hewan)
     {
-        return view('rshp.admin.jenis-hewan.edit', ['item' => $jenis_hewan]);
+        return view('rshp.admin.jenis-hewan.Edit-jenis', ['item' => $jenis_hewan]);
     }
 
     public function update(Request $request, JenisHewan $jenis_hewan)
@@ -92,7 +92,6 @@ class JenisHewanController extends Controller
         return ucwords($nama);
     }
 
-
     protected function validateJenisHewan(Request $request, ?int $id = null): array
     {
         $uniqueRule = Rule::unique('jenis_hewan', 'nama_jenis_hewan');
@@ -121,7 +120,6 @@ class JenisHewanController extends Controller
 
         return $data;
     }
-
 
     protected function createJenisHewan(array $data): void
     {

@@ -14,10 +14,10 @@
 
 .rshp-admin-header {
     background-color: #ffffff;
-    padding: 20px;
+    padding: 20px 30px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     border-bottom: 2px solid #002080;
 }
 
@@ -27,29 +27,28 @@
     display: block;
 }
 
-.rshp-admin-nav {
-    background-color: #f5b301;
-    padding: 15px;
+.rshp-admin-logout {
     display: flex;
-    justify-content: center;
-    gap: 30px;
+    align-items: center;
 }
 
-.rshp-admin-nav a,
-.rshp-admin-nav button {
+.rshp-admin-logout form {
+    margin: 0;
+}
+
+.rshp-admin-logout button {
+    background-color: #002080;
     color: #ffffff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
-    background: transparent;
     border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: bold;
     cursor: pointer;
-    font-size: 15px;
+    transition: background-color 0.3s;
 }
 
-.rshp-admin-nav a:hover,
-.rshp-admin-nav button:hover {
-    color: #ff9900;
+.rshp-admin-logout button:hover {
+    background-color: #0040c1;
 }
 
 .rshp-admin-content {
@@ -62,21 +61,23 @@
 
 .rshp-admin-box {
     background-color: #ffffff;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px #0000001a;
+    padding: 50px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
     max-width: 600px;
     width: 100%;
+    animation: fadeIn 0.6s ease-in-out;
 }
 
 .rshp-admin-box h2 {
     color: #0c5b2c;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 2rem;
 }
 
 .rshp-admin-box p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #333333;
 }
 
@@ -99,20 +100,23 @@
     margin: 0;
     font-size: 12px;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 </style>
 
 <div class="rshp-admin-page">
     <div class="rshp-admin-header">
         <img src="https://rshp.unair.ac.id/wp-content/uploads/2024/06/UNIVERSITAS-AIRLANGGA-scaled.webp" alt="Logo Universitas Airlangga RSHP">
+        <div class="rshp-admin-logout">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
+        </div>
     </div>
-
-    <nav class="rshp-admin-nav">
-        <a href="{{ route('admin.data-master') }}">Data Master</a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit">Logout</button>
-        </form>
-    </nav>
 
     <div class="rshp-admin-content">
         <div class="rshp-admin-box">

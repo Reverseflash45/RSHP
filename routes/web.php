@@ -413,3 +413,76 @@ Route::middleware(['auth', 'isResepsionis'])
             return back()->with('success', 'Pet berhasil didaftarkan.');
         })->name('registrasi-pet.store');
     });
+
+    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::resource('pemilik', \App\Http\Controllers\Admin\PemilikController::class);
+});
+
+use App\Http\Controllers\Admin\JenisController;
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // ...route lain...
+
+    Route::resource('jenis', JenisController::class);
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // ...route lain...
+
+    Route::resource('kategori', KategoriController::class);
+});
+
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // ... route lain ...
+    Route::resource('kode-tindakan', KodeTindakanController::class);
+});
+
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // ... route lain ...
+    Route::resource('kategori-klinis', KategoriKlinisController::class);
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // ... route lain ...
+    Route::get('role-user', [RoleUserController::class, 'index'])->name('role-user.index');
+    Route::post('role-user/activate', [RoleUserController::class, 'activate'])->name('role-user.activate');
+    Route::post('role-user/deactivate', [RoleUserController::class, 'deactivate'])->name('role-user.deactivate');
+    Route::post('role-user/make-active', [RoleUserController::class, 'makeActive'])->name('role-user.makeActive');
+    Route::post('role-user/add', [RoleUserController::class, 'add'])->name('role-user.add');
+});
+
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // ... route lain ...
+    Route::resource('user', UserController::class);
+    Route::get('user/{id}/reset', [UserController::class, 'reset'])->name('user.reset');
+});
+
+use App\Http\Controllers\Dokter\RekamMedisController;
+
+Route::prefix('dokter')->name('dokter.')->middleware(['auth', 'role:dokter'])->group(function () {
+    Route::get('dashboard', [RekamMedisController::class, 'dashboard'])->name('dashboard');
+    Route::get('rekam-medis/create/{temuId}', [RekamMedisController::class, 'create'])->name('rekam-medis.create');
+    Route::post('rekam-medis/store', [RekamMedisController::class, 'store'])->name('rekam-medis.store');
+});
+
+Route::prefix('dokter')->name('dokter.')->middleware(['auth', 'role:dokter'])->group(function () {
+    Route::get('dashboard', [RekamMedisController::class, 'dashboard'])->name('dashboard');
+});
+
+
+Route::prefix('dokter')->name('dokter.')->middleware(['auth', 'role:dokter'])->group(function () {
+    Route::get('dashboard', [RekamMedisController::class, 'dashboard'])->name('dashboard');
+    Route::get('rekam-medis/create/{temuId}', [RekamMedisController::class, 'create'])->name('rekam-medis.create');
+    Route::post('rekam-medis/store', [RekamMedisController::class, 'store'])->name('rekam-medis.store');
+});
+
+use App\Http\Controllers\TenagaMedisController;
+
+Route::get('/dokter/create', [TenagaMedisController::class, 'createDokter'])->name('dokter.create');
+Route::post('/dokter/store', [TenagaMedisController::class, 'storeDokter'])->name('dokter.store');
+
+Route::get('/perawat/create', [TenagaMedisController::class, 'createPerawat'])->name('perawat.create');
+Route::post('/perawat/store', [TenagaMedisController::class, 'storePerawat'])->name('perawat.store');

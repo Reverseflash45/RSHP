@@ -1,277 +1,231 @@
-{{-- resources/views/rshp/dokter/dashboard.blade.php --}}
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard Dokter | RSHP UNAIR</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f6f9;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .header {
-            background-color: #ffffff;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 2px solid #002080;
-        }
-        .header img {
-            max-height: 85px;
-            width: auto;
-            display: block;
-        }
-        nav {
-            background-color: #f5b301;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.1);
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        nav a:hover { color: #ff9900; }
-
-        .content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 50px 20px;
-            gap: 40px;
-        }
-        .welcome-box {
-            background: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px #0000001a;
-            text-align: center;
-            max-width: 700px;
-            width: 100%;
-        }
-        .welcome-box h2 { color: #0c5b2c; margin-bottom: 10px; }
-        .section {
-            background: #fff;
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px #0000001a;
-            width: 100%;
-            max-width: 1000px;
-        }
-        .section h2 {
-            color: #0c5b2c;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        .table-container { overflow-x: auto; margin-top: 15px; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-            font-size: .95rem;
-        }
-        th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background: #f5b301;
-            color: #fff;
-        }
-        tr:nth-child(even) { background: #fafafa; }
-        tr:hover { background: #eef5ff; }
-        .detail-link { color: #002080; font-weight: bold; text-decoration: none; }
-        .detail-link:hover { text-decoration: underline; }
-
-        .card {
-            border: 1px solid #e5e5e5;
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 16px;
-            background: #fff;
-        }
-        .alert {
-            background: #ffe5e5;
-            border: 1px solid #ffbdbd;
-            color: #a30000;
-            padding: 10px 14px;
-            border-radius: 8px;
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-        }
-        footer {
-            background: rgb(2,3,129);
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-top: auto;
-        }
-        footer h3 { margin: 0 0 10px; }
-
-        @media (max-width: 768px) {
-            .header { flex-direction: column; gap: 10px; }
-            nav { flex-wrap: wrap; gap: 20px; }
-            .section { padding: 20px; }
-            table th, table td { font-size: .85rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Dashboard Dokter | RSHP UNAIR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding-bottom: 60px;
+    }
+    .navbar {
+      background-color: #0c5b2c;
+      padding: 12px 24px;
+    }
+    .navbar-brand {
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+    }
+    .greeting {
+      margin: 30px 0;
+      text-align: left;
+    }
+    .greeting h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #0c5b2c;
+      margin-bottom: 8px;
+    }
+    .greeting p {
+      font-size: 1rem;
+      color: #555;
+    }
+    .section-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+    .section-card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #0c5b2c;
+      margin-bottom: 20px;
+    }
+    .table th {
+      background-color: #f5b301;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+    .table td {
+      font-size: 0.9rem;
+    }
+    .btn-transaksi {
+      background-color: #0c5b2c;
+      color: #fff;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    .btn-transaksi:hover {
+      background-color: #094a24;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #0c5b2c;
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
 
-    {{-- HEADER --}}
-    <div class="header">
-        <img src="https://rshp.unair.ac.id/wp-content/uploads/2024/06/UNIVERSITAS-AIRLANGGA-scaled.webp"
-             alt="Logo Universitas Airlangga RSHP">
-    </div>
+<nav class="navbar d-flex justify-content-between">
+  <span class="navbar-brand">RSHP Dokter</span>
+  <a class="nav-link" href="{{ route('logout') }}"
+     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+    @csrf
+  </form>
+</nav>
 
-    {{-- NAVBAR --}}
-    <nav>
-        <a href="{{ route('dokter.dashboard') }}">Home</a>
-        <a href="{{ route('logout') }}"
-           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            Logout
-        </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-            @csrf
-        </form>
-    </nav>
+<div class="container py-4">
 
-    {{-- CONTENT --}}
-    <div class="content">
-        @if(!empty($error))
-            <div class="alert">{{ $error }}</div>
-        @else
-            <div class="welcome-box">
-                <h2>Halo, {{ $dokterName ?? (auth()->user()->nama ?? 'Dokter') }}!</h2>
-                <p>Selamat datang di halaman dokter RSHP Universitas Airlangga.</p>
-            </div>
+  {{-- Greeting --}}
+  <div class="greeting">
+    <h2>Halo, {{ auth()->user()->nama ?? 'Dokter' }}</h2>
+    <p>Selamat datang di halaman dokter RSHP Universitas Airlangga. Semua transaksi hari ini ada di bawah.</p>
+  </div>
 
-            {{-- TEMU DOKTER HARI INI --}}
-            <div class="section">
-                <h2>Temu Dokter Hari Ini</h2>
+  {{-- Temu Dokter Hari Ini --}}
+  <div class="section-card">
+    <h3>Temu Dokter Hari Ini</h3>
+    @if(empty($temuDokter) || $temuDokter->isEmpty())
+      <p class="text-muted">Tidak ada jadwal hari ini.</p>
+    @else
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Waktu</th>
+              <th>Pet</th>
+              <th>Pemilik</th>
+              <th>Status</th>
+              <th>Transaksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($temuDokter as $row)
+              <tr>
+                <td>#{{ $row->idtemu_dokter }}</td>
+                <td>{{ $row->waktu_daftar }}</td>
+                <td>{{ $row->nama_pet }}</td>
+                <td>{{ $row->nama_pemilik }}</td>
+                <td>{{ $row->status }}</td>
+                <td>
+                  <a href="{{ route('dokter.rekam-medis.create', $row->idtemu_dokter) }}"
+                     class="btn btn-transaksi btn-sm">+ Rekam Medis</a>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    @endif
+  </div>
 
-                @php $temu = $temuDokter ?? []; @endphp
+  {{-- Rekam Medis --}}
+  <div class="section-card">
+    <h3>Rekam Medis oleh Saya</h3>
+    @if(empty($rekamMedis) || $rekamMedis->isEmpty())
+      <p class="text-muted">Belum ada rekam medis.</p>
+    @else
+      @foreach($rekamMedis as $rm)
+        @php $anak = $listTindakan[$rm->idrekam_medis] ?? []; @endphp
+        <div class="mb-4 p-3 border rounded bg-light">
+          <h5 class="mb-2">RM #{{ $rm->idrekam_medis }} — {{ $rm->nama_pet }} ({{ $rm->nama_pemilik }})</h5>
+          <p><b>Tanggal:</b> {{ $rm->created_at }}</p>
+          <p><b>Anamnesa:</b> {{ $rm->anamnesa }}</p>
+          <p><b>Diagnosa:</b> {{ $rm->diagnosa }}</p>
 
-                @if(empty($temu))
-                    <p style="text-align:center;">Tidak ada jadwal hari ini.</p>
-                @else
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>No. Urut</th>
-                                    <th>Waktu Daftar</th>
-                                    <th>Nama Pet</th>
-                                    <th>Pemilik</th>
-                                    <th>Status</th>
-                                    <th>Rekam Medis</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($temu as $row)
-                                @php
-                                    $rmId = $row->idrekam_medis ?? $row['idrekam_medis'] ?? null;
-                                @endphp
-                                <tr>
-                                    <td>#{{ $row->idtemu_dokter ?? $row['idtemu_dokter'] }}</td>
-                                    <td>{{ $row->no_urut ?? $row['no_urut'] }}</td>
-                                    <td>{{ $row->waktu_daftar ?? $row['waktu_daftar'] }}</td>
-                                    <td>{{ $row->nama_pet ?? $row['nama_pet'] }}</td>
-                                    <td>{{ $row->nama_pemilik ?? $row['nama_pemilik'] }}</td>
-                                    <td>{{ $row->status ?? $row['status'] }}</td>
-                                    <td>
-                                        @if($rmId)
-                                            <a href="{{ url('perawat/rekam-medis-detail/'.$rmId) }}" class="detail-link">Lihat Detail</a>
-                                        @else
-                                            <span>-</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @endif
-            </div>
+          @if(!empty($anak))
+            <table class="table table-sm table-bordered mt-2">
+              <thead>
+                <tr>
+                  <th>Kode</th>
+                  <th>Deskripsi</th>
+                  <th>Kategori</th>
+                  <th>Klinis</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($anak as $td)
+                  <tr>
+                    <td>{{ $td->kode }}</td>
+                    <td>{{ $td->deskripsi_tindakan_terapi }}</td>
+                    <td>{{ $td->nama_kategori }}</td>
+                    <td>{{ $td->nama_kategori_klinis }}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          @else
+            <p><i>Tidak ada tindakan terapi untuk rekam medis ini.</i></p>
+          @endif
+        </div>
+      @endforeach
+    @endif
+  </div>
 
-            {{-- REKAM MEDIS --}}
-            <div class="section">
-                <h2>Rekam Medis oleh Saya</h2>
+  {{-- Transaksi Dokter Hari Ini --}}
+  <div class="section-card">
+    <h3>Transaksi Saya Hari Ini</h3>
+    @if(empty($transaksiDokter) || $transaksiDokter->isEmpty())
+      <p class="text-muted">Belum ada transaksi hari ini.</p>
+    @else
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>ID Transaksi</th>
+              <th>Pet</th>
+              <th>Pemilik</th>
+              <th>Jenis</th>
+              <th>Deskripsi</th>
+              <th>Waktu</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($transaksiDokter as $trx)
+              <tr>
+                <td>#{{ $trx->idtransaksi }}</td>
+                <td>{{ $trx->nama_pet }}</td>
+                <td>{{ $trx->nama_pemilik }}</td>
+                <td>{{ $trx->jenis_transaksi }}</td>
+                <td>{{ $trx->deskripsi }}</td>
+                <td>{{ $trx->created_at }}</td>
+                <td>
+                  <a href="{{ route('dokter.transaksi.edit', $trx->idtransaksi) }}" class="btn btn-transaksi btn-sm">Edit</a>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    @endif
+  </div>
 
-                @php
-                    $rmList   = $rekamMedis ?? [];
-                    $tindakan = $listTindakan ?? [];
-                @endphp
+</div>
 
-                @if(empty($rmList))
-                    <p style="text-align:center;">Belum ada rekam medis.</p>
-                @else
-                    @foreach($rmList as $rm)
-                        @php
-                            $idRM = $rm->idrekam_medis ?? $rm['idrekam_medis'];
-                            $anak = $tindakan[$idRM] ?? [];
-                        @endphp
-                        <div class="card">
-                            <h3>RM #{{ $idRM }} — {{ $rm->nama_pet ?? $rm['nama_pet'] }} ({{ $rm->nama_pemilik ?? $rm['nama_pemilik'] }})</h3>
-                            <p><b>Tanggal:</b> {{ $rm->created_at ?? $rm['created_at'] }}</p>
-                            <p><b>Anamnesa:</b> {{ $rm->anamnesa ?? $rm['anamnesa'] }}</p>
-                            <p><b>Diagnosa:</b> {{ $rm->diagnosa ?? $rm['diagnosa'] }}</p>
+<footer>
+  © {{ date('Y') }} RSHP Universitas Airlangga — Halaman Dokter
+</footer>
 
-                            @if(!empty($anak))
-                                <h4>Tindakan Terapi:</h4>
-                                <div class="table-container">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Kode</th>
-                                                <th>Deskripsi</th>
-                                                <th>Kategori</th>
-                                                <th>Kategori Klinis</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($anak as $td)
-                                            <tr>
-                                                <td>{{ $td->kode ?? $td['kode'] }}</td>
-                                                <td>{{ $td->deskripsi_tindakan_terapi ?? $td['deskripsi_tindakan_terapi'] }}</td>
-                                                <td>{{ $td->nama_kategori ?? $td['nama_kategori'] }}</td>
-                                                <td>{{ $td->nama_kategori_klinis ?? $td['nama_kategori_klinis'] }}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <p><i>Tidak ada tindakan terapi untuk rekam medis ini.</i></p>
-                            @endif
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-        @endif
-    </div>
-
-    <footer>
-        <h3>© {{ date('Y') }} Rumah Sakit Hewan Pendidikan – Universitas Airlangga</h3>
-        <p>All rights reserved.</p>
-    </footer>
 </body>
 </html>
