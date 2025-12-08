@@ -77,6 +77,7 @@ Route::middleware(['auth', 'isAdministrator'])
         Route::resource('kategori',        KategoriController::class);
         Route::resource('kategori-klinis', KategoriKlinisController::class);
         Route::resource('kode-tindakan',   KodeTindakanController::class);
+        Route::post('role-user/delete',     [RoleUserController::class, 'delete'])->name('role-user.delete');
     });
 
 /*
@@ -486,3 +487,4 @@ Route::post('/dokter/store', [TenagaMedisController::class, 'storeDokter'])->nam
 
 Route::get('/perawat/create', [TenagaMedisController::class, 'createPerawat'])->name('perawat.create');
 Route::post('/perawat/store', [TenagaMedisController::class, 'storePerawat'])->name('perawat.store');
+

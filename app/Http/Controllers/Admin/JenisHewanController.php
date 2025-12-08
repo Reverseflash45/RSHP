@@ -17,6 +17,7 @@ class JenisHewanController extends Controller
 
         $list = DB::table('jenis_hewan')
             ->select('idjenis_hewan', 'nama_jenis_hewan')
+            ->whereNull('deleted_at')
             ->when($q !== '', function ($w) use ($q) {
                 $w->where('nama_jenis_hewan', 'like', "%{$q}%");
             })
@@ -74,7 +75,12 @@ class JenisHewanController extends Controller
     public function destroy(JenisHewan $jenis_hewan)
     {
         try {
-            $jenis_hewan->delete();
+            DB::table('jenis_hewan')
+                ->where('idjenis_hewan', $jenis_hewan->getKey())
+                ->update([
+                    'deleted_at' => now(),
+                    'deleted_by' => auth()->id(),
+                ]);
         } catch (QueryException $e) {
             return back()->with('type', 'error')
                 ->with('msg', 'Gagal menghapus (terkait data lain).');

@@ -3,14 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use SoftDeletes;
 
-    // Karena database-mu pakai tabel 'user' (bukan 'users')
     protected $table = 'user';
     protected $primaryKey = 'iduser';
     public $timestamps = false;
@@ -21,25 +19,26 @@ class User extends Authenticatable
         'nama',
         'email',
         'password',
-        'remember_token',
+        'deleted_by',
     ];
 
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     protected $casts = [
-        'iduser' => 'integer',
+        'iduser'     => 'integer',
+        'deleted_at' => 'datetime',
+        'deleted_by' => 'integer',
     ];
 
-    /**
-     * Relasi ke role.
-     * PENTING: di DB kamu namanya 'role_user' (bukan 'user_role')
-     */
-    public function roles(): BelongsToMany
+    public function pemilik()
     {
-        return $this->belongsToMany(Role::class, 'role_user', 'iduser', 'idrole')
-                    ->withPivot(['status']);
+        return $this->hasOne(Pemilik::class, 'iduser', 'iduser');
+    }
+
+    public function roles()
+    {
+        return $this->hasMany(RoleUser::class, 'iduser', 'iduser');
     }
 }

@@ -6,9 +6,7 @@
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0">Tambah Kategori Klinis</h1>
-      </div>
+      <div class="col-sm-6"></div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
@@ -23,29 +21,35 @@
 <section class="content">
   <div class="container-fluid">
 
-    @if(session('msg'))
-      <div class="alert alert-{{ session('type') === 'success' ? 'success' : 'danger' }}">
-        {{ session('msg') }}
+    @if($errors->any())
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          @foreach($errors->all() as $err)
+            <li>{{ $err }}</li>
+          @endforeach
+        </ul>
       </div>
     @endif
 
     <div class="card">
-      <div class="card-header bg-dark text-white fw-semibold">
+      <div class="card-header">
         Form Tambah Kategori Klinis
       </div>
       <div class="card-body">
-        <form method="POST" action="{{ route('admin.kategori-klinis.store') }}">
+        <form action="{{ route('admin.kategori-klinis.store') }}" method="POST">
           @csrf
+
           <div class="mb-3">
-            <label class="form-label">Nama Kategori Klinis</label>
-            <input type="text" name="nama_kategori_klinis" value="{{ old('nama_kategori_klinis') }}" class="form-control" required>
-            @error('nama_kategori_klinis')
-              <small class="text-danger">{{ $message }}</small>
-            @enderror
+            <label>Nama Kategori Klinis</label>
+            <input type="text"
+                   name="nama_kategori_klinis"
+                   class="form-control"
+                   value="{{ old('nama_kategori_klinis') }}"
+                   required>
           </div>
 
-          <button type="submit" class="btn btn-success">Simpan</button>
-          <a href="{{ route('admin.kategori-klinis.index') }}" class="btn btn-secondary">Kembali</a>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+          <a href="{{ route('admin.kategori-klinis.index') }}" class="btn btn-secondary">Batal</a>
         </form>
       </div>
     </div>

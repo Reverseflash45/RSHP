@@ -3,33 +3,38 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RoleUser extends Model
 {
-    // Tabel pivot: user_role { iduser, idrole, status }
-    protected $table = 'user_role';
+    use SoftDeletes;
 
-    // Eloquent tidak mendukung composite PK. Biarkan tanpa PK increment.
+    protected $table = 'role_user';
+    protected $primaryKey = 'idrole_user';
     public $timestamps = false;
-    public $incrementing = false;
-    protected $primaryKey = null;   // dibiarkan null
 
-    protected $fillable = ['iduser', 'idrole', 'status'];
-    protected $casts = [
-        'iduser' => 'integer',
-        'idrole' => 'integer',
-        'status' => 'integer',
+    protected $fillable = [
+        'iduser',
+        'idrole',
+        'status',
+        'deleted_by',
     ];
 
-    // Relasi ke User
-    public function user(): BelongsTo
+    protected $casts = [
+        'idrole_user' => 'integer',
+        'iduser'      => 'integer',
+        'idrole'      => 'integer',
+        'status'      => 'integer',
+        'deleted_at'  => 'datetime',
+        'deleted_by'  => 'integer',
+    ];
+
+    public function user()
     {
         return $this->belongsTo(User::class, 'iduser', 'iduser');
     }
 
-    // Relasi ke Role
-    public function role(): BelongsTo
+    public function role()
     {
         return $this->belongsTo(Role::class, 'idrole', 'idrole');
     }

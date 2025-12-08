@@ -1,6 +1,6 @@
 @extends('layouts.lte.main')
 
-@section('title', 'Tambah Pemilik')
+@section('title', 'Tambah User')
 
 @section('content')
 <div class="content-header">
@@ -10,7 +10,7 @@
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-          <li class="breadcrumb-item"><a href="{{ route('admin.pemilik.index') }}">Pemilik</a></li>
+          <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">User</a></li>
           <li class="breadcrumb-item active">Tambah</li>
         </ol>
       </div>
@@ -33,39 +33,40 @@
 
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title mb-0">Form Tambah Pemilik</h3>
+        Form Tambah User
       </div>
       <div class="card-body">
-        <form action="{{ route('admin.pemilik.store') }}" method="POST">
+        <form action="{{ route('admin.user.store') }}" method="POST">
           @csrf
 
           <div class="mb-3">
             <label>Nama</label>
-            <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" required>
+            <input type="text"
+                   name="nama"
+                   class="form-control"
+                   value="{{ old('nama') }}"
+                   required>
           </div>
 
           <div class="mb-3">
             <label>Email</label>
-            <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+            <input type="email"
+                   name="email"
+                   class="form-control"
+                   value="{{ old('email') }}"
+                   required>
           </div>
 
           <div class="mb-3">
             <label>Password</label>
-            <input type="password" name="password" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label>No. WA</label>
-            <input type="text" name="no_wa" class="form-control" value="{{ old('no_wa') }}" required>
-          </div>
-
-          <div class="mb-3">
-            <label>Alamat</label>
-            <textarea name="alamat" class="form-control" rows="3" required>{{ old('alamat') }}</textarea>
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   required>
           </div>
 
           <button type="submit" class="btn btn-primary">Simpan</button>
-          <a href="{{ route('admin.pemilik.index') }}" class="btn btn-secondary">Batal</a>
+          <a href="{{ route('admin.user.index') }}" class="btn btn-secondary">Batal</a>
         </form>
       </div>
     </div>
