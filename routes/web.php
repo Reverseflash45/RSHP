@@ -93,7 +93,18 @@ Route::middleware(['auth', 'isAdministrator'])
 
         Route::resource('jenis', JenisController::class);
     });
+Route::prefix('admin')->name('admin.')->group(function () {
 
+    Route::get('/user', [UserController::class, 'index'])
+        ->name('user.index');
+
+    Route::post('/user/{iduser}/reset', [UserController::class, 'reset'])
+        ->name('user.reset');
+
+    Route::delete('/user/{iduser}', [UserController::class, 'destroy'])
+        ->name('user.destroy');
+
+});
 
 /* =========================================================
 |  ROLE 2 — DOKTER (role = 2)
@@ -112,8 +123,17 @@ Route::middleware(['auth', 'isDokter'])
         Route::get('/rekam-medis/create/{temuId}', [RekamMedisController::class, 'create'])->name('rekam-medis.create');
 
         Route::post('/rekam-medis/store', [RekamMedisController::class, 'store'])->name('rekam-medis.store');
-    });
 
+        // ===========================================
+        // ROUTES TRANSAKSI DOKTER - BARU
+        // ===========================================
+        Route::prefix('transaksi')->name('transaksi.')->group(function () {
+            Route::get('/', [RekamMedisController::class, 'transaksiIndex'])->name('index');
+            Route::get('/create', [RekamMedisController::class, 'transaksiCreate'])->name('create');
+            Route::post('/store', [RekamMedisController::class, 'transaksiStore'])->name('store');
+            Route::get('/{id}', [RekamMedisController::class, 'transaksiDetail'])->name('detail');
+        });
+    });
 
 /* =========================================================
 |  ROLE 3 — PERAWAT (role = 3)
@@ -124,6 +144,8 @@ Route::middleware(['auth', 'isPerawat'])
     ->group(function () {
 
         Route::get('/', [PerawatController::class, 'dashboard'])->name('dashboard');
+
+        // ... routes rekam medis yang sudah ada ...
 
         Route::get('/rekam-medis', [PerawatController::class, 'rekamMedisIndex'])
             ->name('rekam-medis.index');
@@ -153,8 +175,30 @@ Route::middleware(['auth', 'isPerawat'])
         Route::post('/rekam-medis/{id}/detail/delete', [PerawatController::class, 'detailDelete'])
             ->whereNumber('id')
             ->name('rekam-medis.detail.delete');
-    });
 
+        // ===========================================
+        // TAMBAHKAN ROUTES TRANSAKSI DI SINI
+        // ===========================================
+        
+        // Group untuk transaksi
+        Route::prefix('transaksi')->name('transaksi.')->group(function () {
+            Route::get('/', [PerawatController::class, 'transaksiIndex'])->name('index');
+            Route::get('/create', [PerawatController::class, 'transaksiCreate'])->name('create');
+            Route::post('/store', [PerawatController::class, 'transaksiStore'])->name('store');
+            Route::get('/{id}', [PerawatController::class, 'transaksiDetail'])
+                ->whereNumber('id')
+                ->name('detail');
+            Route::post('/{id}/update', [PerawatController::class, 'transaksiUpdate'])
+                ->whereNumber('id')
+                ->name('update');
+            Route::post('/{id}/delete', [PerawatController::class, 'transaksiDelete'])
+                ->whereNumber('id')
+                ->name('delete');
+            Route::post('/{id}/bayar', [PerawatController::class, 'transaksiBayar'])
+                ->whereNumber('id')
+                ->name('bayar');
+        });
+    });
 
 /* =========================================================
 |  ROLE 4 — RESEPSIONIS (role = 4)
@@ -372,3 +416,4 @@ Route::post('/dokter/store', [TenagaMedisController::class, 'storeDokter'])->nam
 
 Route::get('/perawat/create', [TenagaMedisController::class, 'createPerawat'])->name('perawat.create');
 Route::post('/perawat/store', [TenagaMedisController::class, 'storePerawat'])->name('perawat.store');
+

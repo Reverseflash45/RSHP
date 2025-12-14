@@ -279,4 +279,229 @@ class PerawatController extends Controller
 
         return back()->with(['ok'=>1,'msg'=>'Tindakan dihapus.']);
     }
+
+    // ==============================================
+    // FUNGSI TRANSAKSI (BARU)
+    // ==============================================
+    
+    public function transaksiIndex()
+    {
+        $data = DB::table('transaksi_perawat as tp')
+            ->join('rekam_medis as rm', 'rm.idrekam_medis', '=', 'tp.idrekam_medis')
+            ->join('pet as p', 'p.idpet', '=', 'rm.idpet')
+            ->join('pemilik as pe', 'pe.idpemilik', '=', 'p.idpemilik')
+            ->join('user as up', 'up.iduser', '=', 'pe.iduser')
+            ->select(
+                'tp.idtransaksi_perawat',
+                'rm.idrekam_medis',
+                'p.nama as nama_pet',
+                'up.nama as nama_pemilik',
+                'tp.tindakan',
+                'tp.biaya',
+                'tp.status',
+                'tp.created_at'
+            )
+            ->orderByDesc('tp.idtransaksi_perawat')
+            ->get();
+
+        return view('rshp.Perawat.transaksi_index', [
+            'namaPerawat' => $this->authUserName(),
+            'data' => $data,
+        ]);
+    }
+
+    public function transaksiCreate(Request $request)
+    {
+        $rekamId = $request->query('idrekam', 0);
+        
+        // Ambil data rekam medis yang bisa ditransaksikan
+        $rekamList = DB::table('rekam_medis as rm')
+            ->join('pet as p', 'p.idpet', '=', 'rm.idpet')
+            ->join('pemilik as pe', 'pe.idpemilik', '=', 'p.idpemilik')
+            ->join('user as up', 'up.iduser', '=', 'pe.iduser')
+            ->leftJoin('transaksi_perawat as tp', function($join) {
+                $join->on('tp.idrekam_medis', '=', 'rm.idrekam_medis')
+                     ->where('tp.status', '!=', 'selesai');
+            })
+            ->whereNull('tp.idtransaksi_perawat')
+            ->select(
+                'rm.idrekam_medis',
+                'rm.created_at',
+                'p.nama as nama_pet',
+                'up.nama as nama_pemilik'
+            )
+            ->orderByDesc('rm.idrekam_medis')
+            ->limit(100)
+            ->get();
+
+        // Jika ada rekamId spesifik, ambil detailnya
+        $selectedRekam = null;
+        if ($rekamId) {
+            $selectedRekam = DB::table('rekam_medis as rm')
+                ->join('pet as p', 'p.idpet', '=', 'rm.idpet')
+                ->join('pemilik as pe', 'pe.idpemilik', '=', 'p.idpemilik')
+                ->join('user as up', 'up.iduser', '=', 'pe.iduser')
+                ->where('rm.idrekam_medis', $rekamId)
+                ->select(
+                    'rm.idrekam_medis',
+                    'rm.created_at',
+                    'p.nama as nama_pet',
+                    'up.nama as nama_pemilik',
+                    'rm.anamnesa',
+                    'rm.diagnosa'
+                )
+                ->first();
+        }
+
+        return view('rshp.Perawat.transaksi_create', [
+            'namaPerawat' => $this->authUserName(),
+            'rekamList' => $rekamList,
+            'selectedRekam' => $selectedRekam,
+            'rekamId' => $rekamId,
+        ]);
+    }
+
+    public function transaksiStore(Request $request)
+    {
+        $data = $request->validate([
+            'idrekam_medis' => 'required|integer|exists:rekam_medis,idrekam_medis',
+            'tindakan' => 'required|string|max:500',
+            'biaya' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            // Cek apakah sudah ada transaksi yang belum selesai
+            $existing = DB::table('transaksi_perawat')
+                ->where('idrekam_medis', $data['idrekam_medis'])
+                ->where('status', '!=', 'selesai')
+                ->first();
+
+            if ($existing) {
+                return back()->withInput()->with('err', 'Sudah ada transaksi aktif untuk rekam medis ini.');
+            }
+
+            // Insert transaksi baru
+            DB::table('transaksi_perawat')->insert([
+                'idrekam_medis' => $data['idrekam_medis'],
+                'tindakan' => $data['tindakan'],
+                'biaya' => $data['biaya'],
+                'keterangan' => $data['keterangan'] ?? null,
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return redirect()->route('perawat.transaksi.index')
+                ->with('msg', 'Transaksi berhasil dibuat.');
+                
+        } catch (QueryException $e) {
+            return back()->withInput()->with('err', 'Gagal menyimpan transaksi: ' . $e->getMessage());
+        }
+    }
+
+    public function transaksiDetail($id)
+    {
+        $id = (int) $id;
+
+        $transaksi = DB::table('transaksi_perawat as tp')
+            ->join('rekam_medis as rm', 'rm.idrekam_medis', '=', 'tp.idrekam_medis')
+            ->join('pet as p', 'p.idpet', '=', 'rm.idpet')
+            ->join('pemilik as pe', 'pe.idpemilik', '=', 'p.idpemilik')
+            ->join('user as up', 'up.iduser', '=', 'pe.iduser')
+            ->leftJoin('role_user as ru', 'ru.idrole_user', '=', 'rm.dokter_pemeriksa')
+            ->leftJoin('user as ud', 'ud.iduser', '=', 'ru.iduser')
+            ->where('tp.idtransaksi_perawat', $id)
+            ->select(
+                'tp.idtransaksi_perawat',
+                'tp.tindakan',
+                'tp.biaya',
+                'tp.keterangan',
+                'tp.status',
+                'tp.created_at',
+                'tp.updated_at',
+                'rm.idrekam_medis',
+                'rm.anamnesa',
+                'rm.diagnosa',
+                'rm.temuan_klinis',
+                'p.nama as nama_pet',
+                'up.nama as nama_pemilik',
+                'ud.nama as nama_dokter'
+            )
+            ->first();
+
+        if (!$transaksi) abort(404);
+
+        return view('rshp.Perawat.transaksi_detail', [
+            'namaPerawat' => $this->authUserName(),
+            'transaksi' => $transaksi,
+            'msg' => session('msg'),
+            'err' => session('err'),
+        ]);
+    }
+
+    public function transaksiUpdate(Request $request, $id)
+    {
+        $id = (int) $id;
+
+        $data = $request->validate([
+            'tindakan' => 'required|string|max:500',
+            'biaya' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string|max:1000',
+            'status' => 'required|in:pending,proses,selesai,batal',
+        ]);
+
+        try {
+            DB::table('transaksi_perawat')
+                ->where('idtransaksi_perawat', $id)
+                ->update([
+                    'tindakan' => $data['tindakan'],
+                    'biaya' => $data['biaya'],
+                    'keterangan' => $data['keterangan'] ?? null,
+                    'status' => $data['status'],
+                    'updated_at' => now(),
+                ]);
+
+            return back()->with('msg', 'Transaksi berhasil diperbarui.');
+            
+        } catch (QueryException $e) {
+            return back()->with('err', 'Gagal memperbarui transaksi.');
+        }
+    }
+
+    public function transaksiDelete(Request $request, $id)
+    {
+        $id = (int) $id;
+
+        try {
+            DB::table('transaksi_perawat')
+                ->where('idtransaksi_perawat', $id)
+                ->delete();
+
+            return redirect()->route('perawat.transaksi.index')
+                ->with('msg', 'Transaksi berhasil dihapus.');
+                
+        } catch (QueryException $e) {
+            return back()->with('err', 'Gagal menghapus transaksi.');
+        }
+    }
+
+    public function transaksiBayar($id)
+    {
+        $id = (int) $id;
+
+        try {
+            DB::table('transaksi_perawat')
+                ->where('idtransaksi_perawat', $id)
+                ->update([
+                    'status' => 'selesai',
+                    'updated_at' => now(),
+                ]);
+
+            return back()->with('msg', 'Status transaksi diubah menjadi selesai (terbayar).');
+            
+        } catch (QueryException $e) {
+            return back()->with('err', 'Gagal mengupdate status transaksi.');
+        }
+    }
 }

@@ -142,7 +142,6 @@
       @if($list instanceof \Illuminate\Contracts\Pagination\Paginator ||
           $list instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
         <div class="card-footer">
-          {{ $list->links() }}
         </div>
       @endif
     </div>
