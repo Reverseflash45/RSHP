@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-class isResepsionis
+class IsResepsionis
 {
     public function handle(Request $request, Closure $next): Response
     {
@@ -21,8 +21,6 @@ class isResepsionis
             ->where('status', 1)
             ->value('idrole');
 
-        // cek di tabel role kamu ya. Di contohmu tadi resepsionis = 4 atau 2?
-        // di modul biasanya: 4 = resepsionis
         if ((int) $roleAct === 4) {
             return $next($request);
         }

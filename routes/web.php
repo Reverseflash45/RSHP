@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 // Public & Site
 use App\Http\Controllers\Site\SiteController;
 use App\Http\Controllers\Rshp\RshpController;
@@ -20,6 +23,16 @@ use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\KategoriKlinisController;
 use App\Http\Controllers\Admin\KodeTindakanController;
+use App\Http\Controllers\Admin\JenisController;
+
+// Dokter
+use App\Http\Controllers\Dokter\RekamMedisController;
+
+// Perawat
+use App\Http\Controllers\Perawat\PerawatController;
+
+// Tenaga Medis
+use App\Http\Controllers\TenagaMedisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,16 +56,15 @@ Auth::routes();
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD UMUM (kalau kamu mau pakai)
+| DASHBOARD UMUM
 |--------------------------------------------------------------------------
 */
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN (role = 1)
-|--------------------------------------------------------------------------
-*/
+
+/* =========================================================
+|  ROLE 1 — ADMIN (role = 1)
+|========================================================= */
 Route::middleware(['auth', 'isAdministrator'])
     ->prefix('admin')
     ->name('admin.')
@@ -69,6 +81,7 @@ Route::middleware(['auth', 'isAdministrator'])
         Route::post('role-user/activate',    [RoleUserController::class, 'activate'])->name('role-user.activate');
         Route::post('role-user/deactivate',  [RoleUserController::class, 'deactivate'])->name('role-user.deactivate');
         Route::post('role-user/make-active', [RoleUserController::class, 'makeActive'])->name('role-user.makeActive');
+        Route::post('role-user/delete',      [RoleUserController::class, 'delete'])->name('role-user.delete');
 
         Route::resource('jenis-hewan',     JenisHewanController::class);
         Route::resource('ras',             RasController::class);
@@ -77,157 +90,88 @@ Route::middleware(['auth', 'isAdministrator'])
         Route::resource('kategori',        KategoriController::class);
         Route::resource('kategori-klinis', KategoriKlinisController::class);
         Route::resource('kode-tindakan',   KodeTindakanController::class);
-        Route::post('role-user/delete',     [RoleUserController::class, 'delete'])->name('role-user.delete');
+
+        Route::resource('jenis', JenisController::class);
     });
 
-/*
-|--------------------------------------------------------------------------
-| RESEPSIONIS (role = 4)
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'isResepsionis'])
-    ->prefix('resepsionis')
-    ->name('resepsionis.')
-    ->group(function () {
-        Route::view('/', 'rshp.resepsionis.dashboard')->name('dashboard');
-    });
 
-/*
-|--------------------------------------------------------------------------
-| DOKTER (role = 2)
-|--------------------------------------------------------------------------
-*/
+/* =========================================================
+|  ROLE 2 — DOKTER (role = 2)
+|========================================================= */
 Route::middleware(['auth', 'isDokter'])
     ->prefix('dokter')
     ->name('dokter.')
     ->group(function () {
-        Route::view('/', 'rshp.dokter.dashboard')->name('dashboard');
+
+        Route::get('/', [RekamMedisController::class, 'dashboard'])->name('dashboard');
+
+        Route::get('/temu-dokter', [RekamMedisController::class, 'temuDokter'])->name('temu-dokter');
+
+        Route::get('/rekam-medis', [RekamMedisController::class, 'rekamMedis'])->name('rekam-medis');
+
+        Route::get('/rekam-medis/create/{temuId}', [RekamMedisController::class, 'create'])->name('rekam-medis.create');
+
+        Route::post('/rekam-medis/store', [RekamMedisController::class, 'store'])->name('rekam-medis.store');
     });
 
-/*
-|--------------------------------------------------------------------------
-| PERAWAT (role = 3)
-|--------------------------------------------------------------------------
-*/
+
+/* =========================================================
+|  ROLE 3 — PERAWAT (role = 3)
+|========================================================= */
 Route::middleware(['auth', 'isPerawat'])
     ->prefix('perawat')
     ->name('perawat.')
     ->group(function () {
-        Route::view('/', 'rshp.perawat.dashboard')->name('dashboard');
+
+        Route::get('/', [PerawatController::class, 'dashboard'])->name('dashboard');
+
+        Route::get('/rekam-medis', [PerawatController::class, 'rekamMedisIndex'])
+            ->name('rekam-medis.index');
+
+        Route::get('/rekam-medis/create', [PerawatController::class, 'rekamMedisCreate'])
+            ->name('rekam-medis.create');
+
+        Route::post('/rekam-medis/store', [PerawatController::class, 'rekamMedisStore'])
+            ->name('rekam-medis.store');
+
+        Route::get('/rekam-medis/{id}', [PerawatController::class, 'rekamMedisDetail'])
+            ->whereNumber('id')
+            ->name('rekam-medis.detail');
+
+        Route::post('/rekam-medis/{id}/header', [PerawatController::class, 'rekamMedisUpdateHeader'])
+            ->whereNumber('id')
+            ->name('rekam-medis.header.update');
+
+        Route::post('/rekam-medis/{id}/detail/add', [PerawatController::class, 'detailAdd'])
+            ->whereNumber('id')
+            ->name('rekam-medis.detail.add');
+
+        Route::post('/rekam-medis/{id}/detail/update', [PerawatController::class, 'detailUpdate'])
+            ->whereNumber('id')
+            ->name('rekam-medis.detail.update');
+
+        Route::post('/rekam-medis/{id}/detail/delete', [PerawatController::class, 'detailDelete'])
+            ->whereNumber('id')
+            ->name('rekam-medis.detail.delete');
     });
 
-/*
-|--------------------------------------------------------------------------
-| PEMILIK (role = 5 atau selain 1..4)
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'isPemilik'])
-    ->prefix('pemilik')
-    ->name('pemilik.')
-    ->group(function () {
-        Route::view('/', 'rshp.pemilik.dashboard')->name('dashboard');
-    });
 
-/* ================= RESEPSIONIS ================= */
+/* =========================================================
+|  ROLE 4 — RESEPSIONIS (role = 4)
+|========================================================= */
 Route::middleware(['auth','isResepsionis'])
     ->prefix('resepsionis')
     ->name('resepsionis.')
     ->group(function () {
 
-        // Dashboard Resepsionis
-        Route::view('/', 'rshp.Resepsionis.home_resepsionis')->name('dashboard');
+        // Dashboard (sesuai file yang kamu punya: resources/views/rshp/resepsionis/dashboard.blade.php)
+        Route::view('/', 'rshp.resepsionis.dashboard')->name('dashboard');
 
-        // Temu Dokter
-        Route::view('/temu-dokter', 'rshp.Resepsionis.edit_temudokter')->name('temu-dokter');
-
-        // Registrasi Pemilik
-        Route::view('/registrasi/pemilik', 'rshp.Resepsionis.registrasi_pemilik')->name('registrasi.pemilik');
-
-        // Registrasi Pet
-        Route::view('/registrasi/pet', 'rshp.Resepsionis.registrasi_pet')->name('registrasi.pet');
-    });
-
-
-/* ===================== DOKTER ================== */
-Route::middleware(['auth','isDokter'])
-    ->prefix('dokter')->name('dokter.')->group(function () {
-        Route::view('/', 'rshp.Dokter.Dasboard')->name('dashboard');
-    });
-
-/* ==================== PERAWAT ================== */
-Route::middleware(['auth','isPerawat'])
-    ->prefix('perawat')
-    ->name('perawat.')
-    ->group(function () {
-
-        // 1) dashboard perawat
-        // pake salah satu dari ini, tergantung nama file-mu
-
-        // kalau file-mu namanya resources/views/rshp/Perawat/home_perawat.blade.php
-        // Route::view('/', 'rshp.Perawat.home_perawat')->name('dashboard');
-
-        // kalau file-mu namanya resources/views/rshp/Perawat/Dasboard.blade.php
-        Route::view('/', 'rshp.Perawat.Dasboard')->name('dashboard');
-
-        // 2) daftar & reservasi yg belum punya rekam medis
-        Route::get('/rekam-medis', function () {
-            // NANTI ini idealnya pakai controller
-            // untuk sekarang biar kebuka dulu
-            return view('rshp.Perawat.rekam_medis_index', [
-                'reservasi' => [],   // sementara kosong
-                'listRM'    => [],   // sementara kosong
-            ]);
-        })->name('rekam-medis.index');
-
-        // 3) form bikin rekam medis
-        Route::get('/rekam-medis/create', function (\Illuminate\Http\Request $request) {
-            return view('rshp.Perawat.rekam_medis_create', [
-                'info' => [
-                    'idtemu_dokter' => $request->query('idtemu'),
-                    'no_urut'       => null,
-                    'waktu_daftar'  => null,
-                    'nama_pet'      => null,
-                    'nama_pemilik'  => null,
-                ],
-                'err' => null,
-                'msg' => null,
-            ]);
-        })->name('rekam-medis.create');
-
-        // 4) detail + tindakan rekam medis
-        Route::get('/rekam-medis/detail', function (\Illuminate\Http\Request $request) {
-            return view('rshp.Perawat.rekam_medis_detail', [
-                'idRekam'        => $request->query('id'),
-                'header'         => [],
-                'detailTindakan' => [],
-                'listKode'       => [],
-                'msg'            => null,
-                'ok'             => null,
-            ]);
-        })->name('rekam-medis.detail');
-    });
-
-
-/* ===================== PEMILIK ================= */
-Route::middleware(['auth','isPemilik'])
-    ->prefix('pemilik')->name('pemilik.')->group(function () {
-        Route::view('/', 'rshp.Pemilik.dashboard')->name('dashboard');
-    });
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
-Route::middleware(['auth', 'isResepsionis'])
-    ->prefix('resepsionis')
-    ->name('resepsionis.')
-    ->group(function () {
-
-        // 1. Dashboard
-        Route::view('/', 'rshp.Resepsionis.dashboard')->name('dashboard');
-
-        // 2. TEMU DOKTER (LIST + FORM)
+        // ==============
+        // TEMU DOKTER
+        // ==============
         Route::get('/temu-dokter', function () {
-            // semua pet + nama pemilik
+
             $allPets = DB::table('pet')
                 ->join('pemilik', 'pemilik.idpemilik', '=', 'pet.idpemilik')
                 ->join('user', 'user.iduser', '=', 'pemilik.iduser')
@@ -239,22 +183,20 @@ Route::middleware(['auth', 'isResepsionis'])
                 ->orderBy('pet.nama')
                 ->get();
 
-            // pet yang hari ini sudah daftar
             $activePetIds = DB::table('temu_dokter')
                 ->whereDate('waktu_daftar', today())
                 ->pluck('idpet')
                 ->toArray();
 
-            // daftar dokter aktif
             $dokter = DB::table('role_user as ru')
                 ->join('role as r', 'r.idrole', '=', 'ru.idrole')
                 ->join('user as u', 'u.iduser', '=', 'ru.iduser')
                 ->where('r.nama_role', 'Dokter')
                 ->where('ru.status', 1)
+                ->select('ru.idrole_user', 'u.nama as nama_dokter')
                 ->orderBy('u.nama')
                 ->get();
 
-            // antrian hari ini
             $antrian = DB::table('temu_dokter as td')
                 ->join('pet as p', 'p.idpet', '=', 'td.idpet')
                 ->join('role_user as ru', 'ru.idrole_user', '=', 'td.idrole_user')
@@ -271,7 +213,7 @@ Route::middleware(['auth', 'isResepsionis'])
                 ->orderBy('td.no_urut')
                 ->get();
 
-            return view('rshp.Resepsionis.edit_temudokter', [
+            return view('rshp.resepsionis.edit_temudokter', [
                 'allPets'      => $allPets,
                 'activePetIds' => $activePetIds,
                 'dokter'       => $dokter,
@@ -279,7 +221,6 @@ Route::middleware(['auth', 'isResepsionis'])
             ]);
         })->name('temu-dokter');
 
-        // 2a. SIMPAN ANTRIAN TEMU DOKTER
         Route::post('/temu-dokter', function (Request $request) {
             $data = $request->validate([
                 'idpet'       => 'required|integer',
@@ -287,9 +228,7 @@ Route::middleware(['auth', 'isResepsionis'])
                 'act'         => 'nullable|string',
             ]);
 
-            // tambah antrian
             if (($data['act'] ?? '') === 'add') {
-                // cari nomor urut hari ini
                 $lastNo = DB::table('temu_dokter')
                     ->whereDate('waktu_daftar', today())
                     ->max('no_urut');
@@ -297,11 +236,11 @@ Route::middleware(['auth', 'isResepsionis'])
                 $nextNo = (int)$lastNo + 1;
 
                 DB::table('temu_dokter')->insert([
-                    'idpet'       => $data['idpet'],
-                    'idrole_user' => $data['idrole_user'],
-                    'no_urut'     => $nextNo,
-                    'status'      => 0,
-                    'waktu_daftar'=> now(),
+                    'idpet'        => $data['idpet'],
+                    'idrole_user'  => $data['idrole_user'],
+                    'no_urut'      => $nextNo,
+                    'status'       => 0,
+                    'waktu_daftar' => now(),
                 ]);
 
                 return back()->with('success', 'Pendaftaran berhasil. No. Urut: ' . $nextNo);
@@ -310,7 +249,6 @@ Route::middleware(['auth', 'isResepsionis'])
             return back();
         })->name('temu-dokter.store');
 
-        // 2b. UPDATE STATUS ANTRIAN
         Route::post('/temu-dokter/status', function (Request $request) {
             $data = $request->validate([
                 'idtemu' => 'required|integer',
@@ -319,19 +257,18 @@ Route::middleware(['auth', 'isResepsionis'])
 
             DB::table('temu_dokter')
                 ->where('idtemu_dokter', $data['idtemu'])
-                ->update([
-                    'status' => $data['status'],
-                ]);
+                ->update(['status' => $data['status']]);
 
             return back()->with('success', 'Status antrian diperbarui.');
         })->name('temu-dokter.status');
 
-        // 3. REGISTRASI PEMILIK (FORM)
+        // ==================
+        // REGISTRASI PEMILIK
+        // ==================
         Route::get('/registrasi-pemilik', function () {
-            return view('rshp.Resepsionis.registrasi_pemilik');
+            return view('rshp.resepsionis.registrasi_pemilik');
         })->name('registrasi-pemilik');
 
-        // 3a. REGISTRASI PEMILIK (SIMPAN)
         Route::post('/registrasi-pemilik', function (Request $request) {
             $data = $request->validate([
                 'nama'     => 'required|string|max:100',
@@ -341,7 +278,6 @@ Route::middleware(['auth', 'isResepsionis'])
                 'alamat'   => 'required|string',
             ]);
 
-            // insert ke user
             $userId = DB::table('user')->insertGetId([
                 'nama'           => $data['nama'],
                 'email'          => $data['email'],
@@ -349,15 +285,12 @@ Route::middleware(['auth', 'isResepsionis'])
                 'remember_token' => null,
             ]);
 
-            // insert ke pemilik
             DB::table('pemilik')->insert([
-                'iduser'  => $userId,
-                'no_wa'   => $data['no_wa'],
-                'alamat'  => $data['alamat'],
+                'iduser' => $userId,
+                'no_wa'  => $data['no_wa'],
+                'alamat' => $data['alamat'],
             ]);
 
-            // kasih role pemilik kalau kamu perlu
-            // misal di DB kamu: 5 = pemilik
             DB::table('role_user')->insert([
                 'iduser' => $userId,
                 'idrole' => 5,
@@ -367,7 +300,9 @@ Route::middleware(['auth', 'isResepsionis'])
             return back()->with('success', 'Pemilik berhasil didaftarkan.');
         })->name('registrasi-pemilik.store');
 
-        // 4. REGISTRASI PET (FORM)
+        // =============
+        // REGISTRASI PET
+        // =============
         Route::get('/registrasi-pet', function () {
             $pemilik = DB::table('pemilik')
                 ->join('user', 'user.iduser', '=', 'pemilik.iduser')
@@ -385,13 +320,12 @@ Route::middleware(['auth', 'isResepsionis'])
                 ->orderBy('ras_hewan.nama_ras')
                 ->get();
 
-            return view('rshp.Resepsionis.registrasi_pet', [
+            return view('rshp.resepsionis.registrasi_pet', [
                 'pemilik_list' => $pemilik,
                 'ras_list'     => $ras,
             ]);
         })->name('registrasi-pet');
 
-        // 4a. REGISTRASI PET (SIMPAN)
         Route::post('/registrasi-pet', function (Request $request) {
             $data = $request->validate([
                 'nama'          => 'required|string|max:100',
@@ -415,76 +349,26 @@ Route::middleware(['auth', 'isResepsionis'])
         })->name('registrasi-pet.store');
     });
 
-    Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    Route::resource('pemilik', \App\Http\Controllers\Admin\PemilikController::class);
-});
 
-use App\Http\Controllers\Admin\JenisController;
+/* =========================================================
+|  ROLE 5 — PEMILIK (role = 5)
+|========================================================= */
+Route::middleware(['auth','isPemilik'])
+    ->prefix('pemilik')
+    ->name('pemilik.')
+    ->group(function () {
 
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // ...route lain...
-
-    Route::resource('jenis', JenisController::class);
-});
-
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // ...route lain...
-
-    Route::resource('kategori', KategoriController::class);
-});
+        Route::view('/', 'rshp.Pemilik.Dashboard')->name('dashboard');
+        Route::view('/data-pet', 'rshp.Pemilik.data-pet')->name('data-pet');
+        Route::view('/rekam-medis', 'rshp.Pemilik.rekam-medis')->name('rekam-medis');
+    });
 
 
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // ... route lain ...
-    Route::resource('kode-tindakan', KodeTindakanController::class);
-});
-
-
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // ... route lain ...
-    Route::resource('kategori-klinis', KategoriKlinisController::class);
-});
-
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // ... route lain ...
-    Route::get('role-user', [RoleUserController::class, 'index'])->name('role-user.index');
-    Route::post('role-user/activate', [RoleUserController::class, 'activate'])->name('role-user.activate');
-    Route::post('role-user/deactivate', [RoleUserController::class, 'deactivate'])->name('role-user.deactivate');
-    Route::post('role-user/make-active', [RoleUserController::class, 'makeActive'])->name('role-user.makeActive');
-    Route::post('role-user/add', [RoleUserController::class, 'add'])->name('role-user.add');
-});
-
-
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // ... route lain ...
-    Route::resource('user', UserController::class);
-    Route::get('user/{id}/reset', [UserController::class, 'reset'])->name('user.reset');
-});
-
-use App\Http\Controllers\Dokter\RekamMedisController;
-
-Route::prefix('dokter')->name('dokter.')->middleware(['auth', 'role:dokter'])->group(function () {
-    Route::get('dashboard', [RekamMedisController::class, 'dashboard'])->name('dashboard');
-    Route::get('rekam-medis/create/{temuId}', [RekamMedisController::class, 'create'])->name('rekam-medis.create');
-    Route::post('rekam-medis/store', [RekamMedisController::class, 'store'])->name('rekam-medis.store');
-});
-
-Route::prefix('dokter')->name('dokter.')->middleware(['auth', 'role:dokter'])->group(function () {
-    Route::get('dashboard', [RekamMedisController::class, 'dashboard'])->name('dashboard');
-});
-
-
-Route::prefix('dokter')->name('dokter.')->middleware(['auth', 'role:dokter'])->group(function () {
-    Route::get('dashboard', [RekamMedisController::class, 'dashboard'])->name('dashboard');
-    Route::get('rekam-medis/create/{temuId}', [RekamMedisController::class, 'create'])->name('rekam-medis.create');
-    Route::post('rekam-medis/store', [RekamMedisController::class, 'store'])->name('rekam-medis.store');
-});
-
-use App\Http\Controllers\TenagaMedisController;
-
+/* =========================================================
+|  TENAGA MEDIS (FORM CREATE) - BIARIN TETEP
+|========================================================= */
 Route::get('/dokter/create', [TenagaMedisController::class, 'createDokter'])->name('dokter.create');
 Route::post('/dokter/store', [TenagaMedisController::class, 'storeDokter'])->name('dokter.store');
 
 Route::get('/perawat/create', [TenagaMedisController::class, 'createPerawat'])->name('perawat.create');
 Route::post('/perawat/store', [TenagaMedisController::class, 'storePerawat'])->name('perawat.store');
-

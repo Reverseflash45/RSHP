@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pemilik;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PemilikController extends Controller
 {
@@ -15,12 +16,14 @@ class PemilikController extends Controller
 
         $list = Pemilik::with('user')
             ->when($q !== '', function ($w) use ($q) {
-                $w->whereHas('user', function ($u) use ($q) {
+                $w->where(function ($x) use ($q) {
+                    $x->whereHas('user', function ($u) use ($q) {
                         $u->where('nama', 'like', "%{$q}%")
                           ->orWhere('email', 'like', "%{$q}%");
                     })
-                  ->orWhere('no_wa', 'like', "%{$q}%")
-                  ->orWhere('alamat', 'like', "%{$q}%");
+                    ->orWhere('no_wa', 'like', "%{$q}%")
+                    ->orWhere('alamat', 'like', "%{$q}%");
+                });
             })
             ->orderBy('idpemilik')
             ->paginate(10)
@@ -51,9 +54,9 @@ class PemilikController extends Controller
         ]);
 
         Pemilik::create([
-            'no_wa'   => $data['no_wa'],
-            'alamat'  => $data['alamat'],
-            'iduser'  => $user->iduser,
+            'no_wa'  => $data['no_wa'],
+            'alamat' => $data['alamat'],
+            'iduser' => $user->iduser,
         ]);
 
         return redirect()->route('admin.pemilik.index')
@@ -62,29 +65,40 @@ class PemilikController extends Controller
 
     public function edit(Pemilik $pemilik)
     {
+        $pemilik->load('user');
+
         return view('rshp.admin.pemilik.edit', compact('pemilik'));
     }
 
     public function update(Request $request, Pemilik $pemilik)
     {
+        $pemilik->load('user');
+
+        if (!$pemilik->user) {
+            return back()->with('error', 'User pemilik tidak ditemukan.');
+        }
+
         $validated = $request->validate([
             'nama'   => ['required', 'string', 'max:100'],
-            'email'  => ['required', 'email'],
+            'email'  => [
+                'required',
+                'email',
+                'max:100',
+                Rule::unique('user', 'email')->ignore($pemilik->user->iduser, 'iduser'),
+            ],
             'no_wa'  => ['nullable', 'string', 'max:50'],
             'alamat' => ['nullable', 'string', 'max:255'],
         ]);
 
         $pemilik->update([
-            'no_wa'  => $validated['no_wa'] ?? $pemilik->no_wa,
-            'alamat'=> $validated['alamat'] ?? $pemilik->alamat,
+            'no_wa'   => $validated['no_wa'] ?? $pemilik->no_wa,
+            'alamat'  => $validated['alamat'] ?? $pemilik->alamat,
         ]);
 
-        if ($pemilik->user) {
-            $pemilik->user->update([
-                'nama'  => $validated['nama'],
-                'email'=> $validated['email'],
-            ]);
-        }
+        $pemilik->user->update([
+            'nama'  => $validated['nama'],
+            'email' => $validated['email'],
+        ]);
 
         return redirect()->route('admin.pemilik.index')
             ->with('success', 'Perubahan data tersimpan.');
@@ -92,8 +106,12 @@ class PemilikController extends Controller
 
     public function destroy(Pemilik $pemilik)
     {
-        $pemilik->deleted_by = auth()->id();
-        $pemilik->save();
+        $userId = (int) (auth()->user()->iduser ?? 0);
+
+        $pemilik->update([
+            'deleted_by' => $userId > 0 ? $userId : null,
+        ]);
+
         $pemilik->delete();
 
         return back()->with('success', 'Pemilik berhasil dihapus.');
